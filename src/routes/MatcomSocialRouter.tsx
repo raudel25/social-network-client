@@ -12,7 +12,7 @@ import { authService } from "../api/auth";
 // import MySpin from "../layout/MySpin";
 // import MyLayout from "../layout/MyLayout";
 
-const TravelAgencyRouter = () => {
+const MatcomSocialRouter = () => {
   const { login, user } = useContext(UserContext);
   const { renew } = authService();
 
@@ -59,4 +59,4 @@ const TravelAgencyRouter = () => {
   );
 };
 
-export default TravelAgencyRouter;
+export default MatcomSocialRouter;
