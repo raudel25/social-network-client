@@ -9,6 +9,7 @@ import { useState } from "react";
 import { AuthRouter } from "./AuthRouter";
 import { ApiResponse } from "../types/api";
 import { authService } from "../api/auth";
+import MySpin from "../layout/MySpin";
 // import MySpin from "../layout/MySpin";
 // import MyLayout from "../layout/MyLayout";
 
@@ -45,9 +46,8 @@ const MatcomSocialRouter = () => {
   return (
     <>
       {loading ? (
-        <h1>Loading...</h1>
+        <MySpin loading={loading} initial={true} />
       ) : (
-        // <MySpin loading={loading} initial={true} />
         <BrowserRouter>
           <Routes>
             <Route path="/auth/*" element={<AuthRouter />}></Route>
