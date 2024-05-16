@@ -12,7 +12,7 @@ export interface LoginForm {
 export interface RegisterForm {
   email: string;
   name: string;
-  // userIdentity: UserIdentityForm;
+  username: string;
   password: string;
   confirm: string;
 }

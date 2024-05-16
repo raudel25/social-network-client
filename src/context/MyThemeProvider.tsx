@@ -2,7 +2,10 @@ import React, { useState, ReactNode, FC } from "react";
 import { ThemeProvider } from "@mui/material/styles";
 import { PaletteMode, createTheme } from "@mui/material";
 
-export const MyThemeThemeContext = React.createContext({
+export const MyThemeThemeContext = React.createContext<{
+  currentTheme: PaletteMode;
+  setTheme: (newTheme: PaletteMode) => void;
+}>({
   currentTheme: "light",
   setTheme: (newTheme: PaletteMode) => {},
 });
@@ -15,7 +18,7 @@ export const MyThemeThemeProvider: FC<MyThemeProviderProps> = ({
   children,
 }) => {
   const [currentTheme, setCurrentTheme] = useState<PaletteMode>(
-    localStorage.getItem("theme") === "light" ? "light" : "dark"
+    localStorage.getItem("theme") === "dark" ? "dark" : "light"
   );
 
   const theme = createTheme({
@@ -25,7 +28,7 @@ export const MyThemeThemeProvider: FC<MyThemeProviderProps> = ({
   });
 
   const setTheme = (newTheme: PaletteMode) => {
-    localStorage.setItem("theme", newTheme.toString());
+    localStorage.setItem("theme", newTheme);
     setCurrentTheme(newTheme);
   };
 
