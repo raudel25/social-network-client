@@ -17,12 +17,20 @@ import {
 import { useContext, useState } from "react";
 import { MyThemeThemeContext } from "../../context/MyThemeProvider";
 import { LoginForm } from "../../types/auth";
+import MessageSnackbar from "../../common/MessageSnackbar";
+import MySpin from "../../layout/MySpin";
+import { authService } from "../../api/auth";
 
 const SigIn = () => {
+  const { signIn } = authService();
+
   const [error, setError] = useState<{
     username: string;
     password: string;
   }>({ username: "", password: "" });
+
+  const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string>("");
 
   const validator = (form: LoginForm) => {
     let isValid = true;
@@ -45,6 +53,23 @@ const SigIn = () => {
     return isValid;
   };
 
+  const signFunc = async (form: LoginForm, remember: boolean) => {
+    setLoading(true);
+    const res = await signIn(form);
+    setLoading(false);
+
+    if (!res.ok) {
+      setErrorMessage(res.message);
+      return;
+    }
+
+    if (remember) {
+      localStorage.setItem("token", res.value!.token);
+    } else {
+      sessionStorage.setItem("token", res.value!.token);
+    }
+  };
+
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -56,16 +81,19 @@ const SigIn = () => {
 
     if (!validator(form)) return;
 
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
+    signFunc(form, data.get("remember") === "on");
   };
 
   const themeContext = useContext(MyThemeThemeContext);
 
   return (
     <Container component="main" maxWidth="xs">
+      <MessageSnackbar
+        open={errorMessage.length !== 0}
+        handleClose={() => setErrorMessage("")}
+        message={errorMessage}
+      />
+      <MySpin loading={loading} />
       <div className="change-theme">
         <Button
           onClick={() =>
@@ -109,10 +137,10 @@ const SigIn = () => {
                 helperText={error.username}
                 required
                 fullWidth
-                id="emailOrUsername"
+                id="username"
                 label="Email Address or User Name"
-                name="email"
-                autoComplete="email"
+                name="username"
+                autoComplete="given-name"
               />
             </Grid>
             <Grid item xs={12}>

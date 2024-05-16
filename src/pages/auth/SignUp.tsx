@@ -67,11 +67,11 @@ const SignUp = () => {
   const signUpFunc = async (form: RegisterForm) => {
     setLoading(true);
     const res = await signUp(form);
-    console.log(res);
+    setLoading(false);
+
     if (!res.ok) {
       setErrorMessage(res.message);
     }
-    setLoading(false);
   };
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {

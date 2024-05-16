@@ -67,7 +67,7 @@ export async function apiWithToken<T1, T2>(
     const resp = await fetchWithToken(endpoint, data, method, query);
     const body = await resp.json();
 
-    return { ok: true, message: body.message, value: body.data };
+    return { ok: body.ok, message: body.message, value: body.data };
   } catch {
     return {
       ok: false,
@@ -86,7 +86,7 @@ export async function apiNoToken<T1, T2>(
     const resp = await fetchNoToken(endpoint, data, method, query);
     const body = await resp.json();
 
-    return { ok: true, message: body.message, value: body.data };
+    return { ok: body.ok, message: body.message, value: body.data };
   } catch {
     return {
       ok: false,
