@@ -15,8 +15,16 @@ import {
 import { useContext, useState } from "react";
 import { MyThemeThemeContext } from "../../context/MyThemeProvider";
 import { RegisterForm } from "../../types/auth";
+import { authService } from "../../api/auth";
+import MySpin from "../../layout/MySpin";
+import MessageSnackbar from "../../common/MessageSnackbar";
 
-const Register = () => {
+const SignUp = () => {
+  const { signUp } = authService();
+
+  const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string>("");
+
   const [error, setError] = useState<{
     name: string;
     username: string;
@@ -56,6 +64,16 @@ const Register = () => {
     return isValid;
   };
 
+  const signUpFunc = async (form: RegisterForm) => {
+    setLoading(true);
+    const res = await signUp(form);
+    console.log(res);
+    if (!res.ok) {
+      setErrorMessage(res.message);
+    }
+    setLoading(false);
+  };
+
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -70,16 +88,19 @@ const Register = () => {
 
     if (!validator(form)) return;
 
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
+    signUpFunc(form);
   };
 
   const themeContext = useContext(MyThemeThemeContext);
 
   return (
     <Container component="main" maxWidth="xs">
+      <MessageSnackbar
+        open={errorMessage.length !== 0}
+        handleClose={() => setErrorMessage("")}
+        message={errorMessage}
+      />
+      <MySpin loading={loading} />
       <div className="change-theme">
         <Button
           onClick={() =>
@@ -105,7 +126,7 @@ const Register = () => {
       >
         <div className="center-content mt-10">
           <img
-            className="logo mb-5"
+            className="logo mb-1"
             style={{ width: 70, height: 70 }}
             src={logo}
             alt="logo"
@@ -192,7 +213,7 @@ const Register = () => {
           </Button>
           <Grid container justifyContent="flex-end">
             <Grid item>
-              <Link href="#" variant="body2">
+              <Link href="login" variant="body2">
                 Already have an account? Sign in
               </Link>
             </Grid>
@@ -203,4 +224,4 @@ const Register = () => {
   );
 };
 
-export default Register;
+export default SignUp;

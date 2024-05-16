@@ -7,11 +7,10 @@ export const authService = () => {
     return apiNoToken<T, User>(`auth/${endpoint}`, data, HttpMethods.POST);
   }
 
-  const login = (data: LoginForm) => method<LoginForm>(data, "login");
-  const registerAgency = (data: RegisterForm) =>
-    method<RegisterForm>(data, "register");
+  const signIn = (data: LoginForm) => method<LoginForm>(data, "login");
+  const signUp = (data: RegisterForm) => method<RegisterForm>(data, "register");
   const renew = () =>
     apiWithToken<{}, User>("auth/renew", {}, HttpMethods.POST);
 
-  return { login, registerAgency, renew };
+  return { signIn, signUp, renew };
 };
