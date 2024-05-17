@@ -36,20 +36,21 @@ export const fetchWithToken = (
     Object.keys(query).length === 0 ? "" : `?${querystring.stringify(query)}`;
   const url = `${baseUrl}/${endpoint}${queryString}`;
 
-  const token = localStorage.getItem("token") || "";
+  const token =
+    localStorage.getItem("token") || sessionStorage.getItem("token") || "";
 
   if (method === HttpMethods.GET) {
     return fetch(url, {
       method,
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: token,
       },
     });
   } else {
     return fetch(url, {
       method,
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: token,
         "Content-Type": "application/json",
       },
       body: JSON.stringify(data),

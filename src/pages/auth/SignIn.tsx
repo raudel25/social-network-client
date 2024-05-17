@@ -20,8 +20,12 @@ import { LoginForm } from "../../types/auth";
 import MessageSnackbar from "../../common/MessageSnackbar";
 import MySpin from "../../layout/MySpin";
 import { authService } from "../../api/auth";
+import { useNavigate } from "react-router-dom";
+import { UserContext } from "../../context/UserProvider";
 
 const SigIn = () => {
+  const { login } = useContext(UserContext);
+  const navigate = useNavigate();
   const { signIn } = authService();
 
   const [error, setError] = useState<{
@@ -64,10 +68,13 @@ const SigIn = () => {
     }
 
     if (remember) {
-      localStorage.setItem("token", res.value!.token);
+      localStorage.setItem("remember", "true");
     } else {
-      sessionStorage.setItem("token", res.value!.token);
+      localStorage.setItem("remember", "false");
     }
+
+    login(res.value!);
+    navigate("/home");
   };
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {

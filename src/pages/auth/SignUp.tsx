@@ -18,8 +18,12 @@ import { RegisterForm } from "../../types/auth";
 import { authService } from "../../api/auth";
 import MySpin from "../../layout/MySpin";
 import MessageSnackbar from "../../common/MessageSnackbar";
+import { useNavigate } from "react-router-dom";
+import { UserContext } from "../../context/UserProvider";
 
 const SignUp = () => {
+  const navigate = useNavigate();
+  const { login } = useContext(UserContext);
   const { signUp } = authService();
 
   const [loading, setLoading] = useState(false);
@@ -71,6 +75,9 @@ const SignUp = () => {
 
     if (!res.ok) {
       setErrorMessage(res.message);
+    } else {
+      login(res.value!);
+      navigate("/home");
     }
   };
 

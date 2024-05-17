@@ -10,6 +10,8 @@ import { AuthRouter } from "./AuthRouter";
 import { ApiResponse } from "../types/api";
 import { authService } from "../api/auth";
 import MySpin from "../layout/MySpin";
+import PrivateRoutes from "./PrivateRoutes";
+import MyLayout from "../layout/MyLayout";
 // import MySpin from "../layout/MySpin";
 // import MyLayout from "../layout/MyLayout";
 
@@ -20,7 +22,8 @@ const MatcomSocialRouter = () => {
   const [loading, setLoading] = useState(true);
 
   const checkRegister = () => {
-    const token = localStorage.getItem("token");
+    const token =
+      localStorage.getItem("token") ?? sessionStorage.getItem("token");
 
     if (token) {
       setLoading(true);
@@ -51,7 +54,10 @@ const MatcomSocialRouter = () => {
         <BrowserRouter>
           <Routes>
             <Route path="/auth/*" element={<AuthRouter />}></Route>
-            {/* <Route path="*" element={<MyLayout />}></Route> */}
+            <Route
+              path="*"
+              element={<PrivateRoutes component={MyLayout} />}
+            ></Route>
           </Routes>
         </BrowserRouter>
       )}

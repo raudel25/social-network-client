@@ -21,12 +21,18 @@ export const UserProvider: FC<UserProviderProps> = ({ children }) => {
 
   const login = (userData: User) => {
     setUser(userData);
-    localStorage.setItem("token", userData.token);
+    const remember = localStorage.getItem("remember") === "true";
+
+    if (remember) localStorage.setItem("token", userData.token);
+    else sessionStorage.setItem("token", userData.token);
   };
 
   const logout = () => {
     setUser(null);
-    localStorage.removeItem("token");
+    const remember = localStorage.getItem("remember") === "true";
+
+    if (remember) localStorage.removeItem("token");
+    else sessionStorage.removeItem("token");
   };
 
   return (
