@@ -1,6 +1,9 @@
+import { Profile } from "./profile";
+
 export interface User {
   token: string;
   username: string;
+  profile: Profile;
 }
 
 export interface LoginForm {

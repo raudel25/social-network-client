@@ -1,6 +1,6 @@
 import { Search, LightMode, DarkMode } from "@mui/icons-material";
 import { IconButton, InputAdornment, TextField } from "@mui/material";
-import Recommendations from "../pages/home/Recommendations";
+import Suggestions from "../pages/home/Suggestions";
 import { useContext } from "react";
 import { MyThemeThemeContext } from "../context/MyThemeProvider";
 
@@ -37,7 +37,7 @@ const RightLayout = () => {
         }}
       />
       <div className="right-layout-container mt-5">
-        <Recommendations />
+        <Suggestions />
       </div>
     </div>
   );
