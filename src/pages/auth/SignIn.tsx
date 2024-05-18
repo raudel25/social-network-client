@@ -10,6 +10,7 @@ import {
   CssBaseline,
   FormControlLabel,
   Grid,
+  IconButton,
   Link,
   TextField,
   Typography,
@@ -102,7 +103,7 @@ const SigIn = () => {
       />
       <MySpin loading={loading} />
       <div className="change-theme">
-        <Button
+        <IconButton
           onClick={() =>
             themeContext.setTheme(
               themeContext.currentTheme === "light" ? "dark" : "light"
@@ -114,7 +115,7 @@ const SigIn = () => {
           ) : (
             <LightModeIcon />
           )}
-        </Button>
+        </IconButton>
       </div>
       <CssBaseline />
       <Box

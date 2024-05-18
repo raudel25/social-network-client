@@ -8,6 +8,7 @@ import {
   Container,
   CssBaseline,
   Grid,
+  IconButton,
   Link,
   TextField,
   Typography,
@@ -109,7 +110,7 @@ const SignUp = () => {
       />
       <MySpin loading={loading} />
       <div className="change-theme">
-        <Button
+        <IconButton
           onClick={() =>
             themeContext.setTheme(
               themeContext.currentTheme === "light" ? "dark" : "light"
@@ -121,7 +122,7 @@ const SignUp = () => {
           ) : (
             <LightModeIcon />
           )}
-        </Button>
+        </IconButton>
       </div>
       <CssBaseline />
       <Box

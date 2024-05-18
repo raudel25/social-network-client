@@ -21,3 +21,38 @@
   width: 100vw;
   height: 100vh;
 }
+
+.left-layout {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding: 15px;
+}
+
+.left-layout-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+}
+
+.avatar-container {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  border-radius: 20px;
+  padding: 10px;
+  transition: background-color 0.3s ease;
+}
+
+.avatar-container:hover {
+  transform: scale(1.05);
+  background-color: rgba(99, 95, 95, 0.15);
+}
+
+.end-left-layout {
+  margin-top: auto;
+}
+
+.more-icon {
+  margin-left: auto;
+}
