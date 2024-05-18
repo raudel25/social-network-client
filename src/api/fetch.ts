@@ -37,7 +37,7 @@ export const fetchWithToken = (
   const url = `${baseUrl}/${endpoint}${queryString}`;
 
   const token =
-    localStorage.getItem("token") || sessionStorage.getItem("token") || "";
+    localStorage.getItem("token") ?? sessionStorage.getItem("token") ?? "";
 
   if (method === HttpMethods.GET) {
     return fetch(url, {

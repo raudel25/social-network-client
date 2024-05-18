@@ -31,7 +31,11 @@ const MatcomSocialRouter = () => {
         .then((response: ApiResponse<User>) => {
           if (response.ok) {
             login(response.value!);
-          } else setLoading(false);
+          } else {
+            localStorage.removeItem("token");
+            sessionStorage.removeItem("token");
+            setLoading(false);
+          }
         })
         .catch(() => setLoading(false));
     } else setLoading(false);

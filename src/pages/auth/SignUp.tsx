@@ -131,7 +131,7 @@ const SignUp = () => {
           alignItems: "center",
         }}
       >
-        <div className="center-content mt-10">
+        <div className="center-content mt-10 mb-5">
           <img
             className="logo mb-1"
             style={{ width: 70, height: 70 }}
@@ -140,7 +140,7 @@ const SignUp = () => {
           />
         </div>
         <Typography component="h1" variant="h5">
-          Sign up
+          Matcom Social
         </Typography>
 
         <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>

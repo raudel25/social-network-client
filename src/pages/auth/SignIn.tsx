@@ -28,6 +28,7 @@ const SigIn = () => {
   const navigate = useNavigate();
   const { signIn } = authService();
 
+  const [remember, setRemember] = useState<boolean>(false);
   const [error, setError] = useState<{
     username: string;
     password: string;
@@ -47,7 +48,7 @@ const SigIn = () => {
       }
     }
 
-    if (form.password.length !== 8) {
+    if (form.password.length < 8) {
       aux.password = "Password must be 8 characters long";
       isValid = false;
     }
@@ -57,7 +58,7 @@ const SigIn = () => {
     return isValid;
   };
 
-  const signFunc = async (form: LoginForm, remember: boolean) => {
+  const signFunc = async (form: LoginForm) => {
     setLoading(true);
     const res = await signIn(form);
     setLoading(false);
@@ -87,8 +88,7 @@ const SigIn = () => {
     };
 
     if (!validator(form)) return;
-
-    signFunc(form, data.get("remember") === "on");
+    signFunc(form);
   };
 
   const themeContext = useContext(MyThemeThemeContext);
@@ -124,7 +124,7 @@ const SigIn = () => {
           alignItems: "center",
         }}
       >
-        <div className="center-content mt-10">
+        <div className="center-content mt-10 mb-5">
           <img
             className="logo mb-1"
             style={{ width: 70, height: 70 }}
@@ -133,7 +133,7 @@ const SigIn = () => {
           />
         </div>
         <Typography component="h1" variant="h5">
-          Sign up
+          Matcom Social
         </Typography>
 
         <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
@@ -165,7 +165,13 @@ const SigIn = () => {
             </Grid>
           </Grid>
           <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
+            control={
+              <Checkbox
+                value={remember}
+                color="primary"
+                onChange={() => setRemember(!remember)}
+              />
+            }
             label="Remember me"
           />
 
@@ -175,7 +181,7 @@ const SigIn = () => {
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
           >
-            Sign Up
+            Sign In
           </Button>
           <Grid container justifyContent="flex-end">
             <Grid item>

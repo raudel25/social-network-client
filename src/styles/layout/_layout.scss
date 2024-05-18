@@ -11,8 +11,13 @@
   z-index: 9999;
 }
 
-.layout-logo{
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.layout-logo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.layout {
+  width: 100vw;
+  height: 100vh;
 }
