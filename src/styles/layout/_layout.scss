@@ -29,12 +29,6 @@
   padding: 15px;
 }
 
-.left-layout-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: start;
-}
-
 .avatar-container {
   cursor: pointer;
   display: flex;
@@ -55,4 +49,26 @@
 
 .more-icon {
   margin-left: auto;
+}
+
+.right-layout {
+  height: 100vh;
+  padding: 15px;
+}
+
+.right-layout-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+}
+
+.right-layout-container {
+  height: 90%;
+  overflow-y: auto;
+}
+
+.right-layout-item {
+  padding: 15px;
+  border-radius: 20px;
+  border: 0.5px solid rgba(255, 255, 255, 0.5);
 }
