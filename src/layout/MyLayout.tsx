@@ -8,10 +8,10 @@ const MyLayout = () => {
     <div className="layout">
       <CssBaseline />
       <Grid container>
-        <Grid item xs={2}>
+        <Grid item xs={2.5}>
           <LeftLayout />
         </Grid>
-        <Grid item xs={7}>
+        <Grid item xs={6.5}>
           <div className="center-layout">
             <WebRouter />
           </div>

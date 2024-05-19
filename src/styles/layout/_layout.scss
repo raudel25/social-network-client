@@ -18,6 +18,8 @@
 }
 
 .layout {
+  padding-left: 100px;
+  padding-right: 100px;
   width: 100vw;
   height: 100vh;
 }
@@ -75,5 +77,6 @@
 
 .center-layout {
   height: 100vh;
-  padding: 15px;
+  padding-left: 15px;
+  padding-right: 15px;
 }

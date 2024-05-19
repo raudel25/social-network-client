@@ -10,8 +10,14 @@ import logo from "../assets/logo.jpg";
 import ProfileLayout from "./ProfileLayout";
 import Home from "@mui/icons-material/Home";
 import PersonIcon from "@mui/icons-material/Person";
+import { useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import { UserContext } from "../context/UserProvider";
 
 const LeftLayout = () => {
+  const navigate = useNavigate();
+  const { user } = useContext(UserContext);
+
   return (
     <div className="left-layout ">
       <img
@@ -23,11 +29,14 @@ const LeftLayout = () => {
 
       <List>
         {[
-          ["Home", <Home />],
-          ["Profile", <PersonIcon />],
-        ].map(([text, icon], index) => (
+          ["Home", <Home />, "/home"],
+          ["Profile", <PersonIcon />, `/profile/${user?.username}`],
+        ].map(([text, icon, route], index) => (
           <ListItem key={index} disablePadding>
-            <ListItemButton style={{ borderRadius: 20 }}>
+            <ListItemButton
+              style={{ borderRadius: 20 }}
+              onClick={() => navigate(route as string)}
+            >
               <ListItemIcon>{icon}</ListItemIcon>
               <ListItemText primary={text} />
             </ListItemButton>

@@ -1,12 +1,12 @@
 import { Navigate, Route, Routes } from "react-router-dom";
-import Home from "../pages/home/Home";
-import Profile from "../pages/profile/Profile";
+import HomePage from "../pages/home/Home";
+import ProfilePage from "../pages/profile/Profile";
 
 const WebRouter = () => {
   return (
     <Routes>
-      <Route path="/home" element={<Home />}></Route>
-      <Route path="/profile/:username" element={<Profile />}></Route>
+      <Route path="/home" element={<HomePage />}></Route>
+      <Route path="/profile/:username" element={<ProfilePage />}></Route>
       <Route path="*" element={<Navigate to="/home" />}></Route>
     </Routes>
   );

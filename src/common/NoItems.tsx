@@ -2,7 +2,7 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import InboxIcon from "@mui/icons-material/Inbox";
 
-const NoItems = () => {
+export const NoItemsV2 = () => {
   return (
     <Box
       display="flex"
@@ -19,4 +19,23 @@ const NoItems = () => {
   );
 };
 
-export default NoItems;
+export const NoItemsV1 = () => {
+  return (
+    <Box
+      display="flex"
+      flexDirection="column"
+      alignItems="center"
+      justifyContent="center"
+      height="100vh"
+      color="text.secondary"
+    >
+      <InboxIcon style={{ fontSize: 80 }} />
+      <Typography variant="h6" gutterBottom>
+        No items found
+      </Typography>
+      <Typography variant="body2">
+        There are no items to display at the moment.
+      </Typography>
+    </Box>
+  );
+};

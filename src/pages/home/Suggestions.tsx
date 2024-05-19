@@ -10,7 +10,7 @@ import { Profile } from "../../types/profile";
 import { profileService } from "../../api/profile";
 import MessageSnackbar from "../../common/MessageSnackbar";
 import { Pagination } from "../../types/api";
-import NoItems from "../../common/NoItems";
+import { NoItemsV2 } from "../../common/NoItems";
 
 const Suggestions = () => {
   const { getProfiles } = profileService();
@@ -102,7 +102,7 @@ const Suggestions = () => {
           {getProfile(p)}
         </div>
       ))}
-      {pagination.totalRows === 0 && <NoItems />}
+      {pagination.totalRows === 0 && <NoItemsV2 />}
       {pagination.page < pagination.totalPages && (
         <Button onClick={() => loadProfiles(false)}>See more</Button>
       )}

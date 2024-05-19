@@ -11,5 +11,7 @@ export const profileService = () => {
   const getProfiles = (query: any) =>
     method<{}, Pagination<Profile>>({}, undefined, query);
 
-  return { getProfiles };
+  const getByUsername = (username: string) => method<{}, Profile>({}, username);
+
+  return { getProfiles, getByUsername };
 };
