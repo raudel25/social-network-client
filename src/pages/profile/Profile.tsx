@@ -108,45 +108,53 @@ const ProfilePage = () => {
             </div>
           </div>
           <div className="profile-container">
-            <div
-              className="profile-banner"
-              style={{
-                backgroundColor: theme.palette.primary.main,
-                backgroundImage: profile.bannerPhoto?.src,
-              }}
-            ></div>
-            <Avatar className="profile-avatar"></Avatar>
-            <div className="profile-btn">
-              <Button variant="outlined">
-                {user?.profile.id === profile.id ? "Config profile" : "Follow"}
-              </Button>
+            <div className="profile-container-child">
+              <div className="profile-image-container">
+                <div
+                  className="profile-banner"
+                  style={{
+                    backgroundColor: theme.palette.primary.main,
+                    backgroundImage: profile.bannerPhoto?.src,
+                  }}
+                ></div>
+                <Avatar className="profile-avatar"></Avatar>
+                <div className="profile-btn">
+                  <Button variant="outlined">
+                    {user?.profile.id === profile.id
+                      ? "Config profile"
+                      : profile.follow
+                      ? "Following"
+                      : "Follow"}
+                  </Button>
+                </div>
+              </div>
+              <Typography variant="h5">{profile.name}</Typography>
+              <Typography variant="body1" color="textSecondary">
+                @{profile.username}
+              </Typography>
+              <div className="mt-5">
+                <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+                  <Tabs
+                    value={value}
+                    onChange={handleChange}
+                    aria-label="basic tabs example"
+                  >
+                    <Tab label="Posts" {...a11yProps(0)} />
+                    <Tab label="Followers" {...a11yProps(1)} />
+                    <Tab label="Following" {...a11yProps(2)} />
+                  </Tabs>
+                </Box>
+                <CustomTabPanel value={value} index={0}>
+                  Item One
+                </CustomTabPanel>
+                <CustomTabPanel value={value} index={1}>
+                  Item Two
+                </CustomTabPanel>
+                <CustomTabPanel value={value} index={2}>
+                  Item Three
+                </CustomTabPanel>
+              </div>
             </div>
-          </div>
-          <Typography variant="h5">{profile.name}</Typography>
-          <Typography variant="body1" color="textSecondary">
-            @{profile.username}
-          </Typography>
-          <div className="mt-5">
-            <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-              <Tabs
-                value={value}
-                onChange={handleChange}
-                aria-label="basic tabs example"
-              >
-                <Tab label="Posts" {...a11yProps(0)} />
-                <Tab label="Followers" {...a11yProps(1)} />
-                <Tab label="Follow" {...a11yProps(2)} />
-              </Tabs>
-            </Box>
-            <CustomTabPanel value={value} index={0}>
-              Item One
-            </CustomTabPanel>
-            <CustomTabPanel value={value} index={1}>
-              Item Two
-            </CustomTabPanel>
-            <CustomTabPanel value={value} index={2}>
-              Item Three
-            </CustomTabPanel>
           </div>
         </>
       ) : (

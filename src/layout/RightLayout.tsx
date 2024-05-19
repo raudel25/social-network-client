@@ -37,7 +37,9 @@ const RightLayout = () => {
         }}
       />
       <div className="right-layout-container mt-5">
-        <Suggestions />
+        <div className="right-layout-container-child">
+          <Suggestions />
+        </div>
       </div>
     </div>
   );
