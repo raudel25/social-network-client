@@ -11,9 +11,12 @@ import { profileService } from "../../api/profile";
 import MessageSnackbar from "../../common/MessageSnackbar";
 import { Pagination } from "../../types/api";
 import { NoItemsV2 } from "../../common/NoItems";
+import { useNavigate } from "react-router-dom";
 
 const Suggestions = () => {
   const { getProfiles } = profileService();
+
+  const navigate = useNavigate();
 
   const [loading, setLoading] = useState<boolean>(false);
   const [pagination, setPagination] = useState<Pagination<Profile>>({
@@ -28,19 +31,23 @@ const Suggestions = () => {
   const getProfile = (p: Profile) => {
     return (
       <div className="profile-recommendation-container">
-        <Avatar alt={p.username} src={p.bannerPhoto?.src} />
-        <div className="ml-2 mr-1">
-          <Link
-            variant="body1"
-            href="#"
-            className="mb-1"
-            style={{ fontWeight: "bold" }}
-          >
-            {p.name}
-          </Link>
-          <Typography variant="body1" color="textSecondary">
-            @{p.username}
-          </Typography>
+        <div
+          className="profile-recommendation-name pointer"
+          onClick={() => navigate(`../profile/${p.username}`)}
+        >
+          <Avatar alt={p.username} src={p.bannerPhoto?.src} />
+          <div className="ml-2 mr-1 ">
+            <Link
+              variant="body1"
+              className="mb-1 "
+              style={{ fontWeight: "bold" }}
+            >
+              {p.name}
+            </Link>
+            <Typography variant="body1" color="textSecondary">
+              @{p.username}
+            </Typography>
+          </div>
         </div>
         <div className="follow-btn">
           <Button variant="contained">Follow</Button>
@@ -61,8 +68,6 @@ const Suggestions = () => {
       setErrorMessage(response.message);
       return;
     }
-
-    console.log(response.value!);
 
     setPagination(
       clear
