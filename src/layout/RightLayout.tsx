@@ -9,6 +9,7 @@ const RightLayout = () => {
   return (
     <div className="right-layout">
       <TextField
+        style={{ paddingRight: 17 }}
         fullWidth
         placeholder="Search"
         InputProps={{

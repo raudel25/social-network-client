@@ -17,6 +17,7 @@ import { NoItemsV1 } from "../../common/NoItems";
 import { useTheme } from "@mui/material/styles";
 import { UserContext } from "../../context/UserProvider";
 import Tab from "@mui/material/Tab";
+import ConfigModal from "./ConfigModal";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -62,6 +63,7 @@ const ProfilePage = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [profile, setProfile] = useState<Profile | undefined>(undefined);
+  const [openModal, setOpenModal] = useState<boolean>(false);
 
   const loadProfile = async (username: string) => {
     setLoading(true);
@@ -86,6 +88,13 @@ const ProfilePage = () => {
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
+  };
+
+  const handleProfileBtn = () => {
+    if (user?.profile.id === profile!.id) {
+      setOpenModal(true);
+      return;
+    }
   };
 
   return (
@@ -119,7 +128,7 @@ const ProfilePage = () => {
                 ></div>
                 <Avatar className="profile-avatar"></Avatar>
                 <div className="profile-btn">
-                  <Button variant="outlined">
+                  <Button variant="outlined" onClick={handleProfileBtn}>
                     {user?.profile.id === profile.id
                       ? "Config profile"
                       : profile.follow
@@ -160,6 +169,7 @@ const ProfilePage = () => {
       ) : (
         <NoItemsV1 />
       )}
+      <ConfigModal open={openModal} handleClose={() => setOpenModal(false)} />
     </>
   );
 };
