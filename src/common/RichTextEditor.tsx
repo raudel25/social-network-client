@@ -57,6 +57,7 @@ const RichTextEditor: FC<RichTextEditorProps> = ({
       onChange({ html: content, text: plainText });
     }
   };
+
   return (
     <Box
       sx={{
@@ -76,7 +77,6 @@ const RichTextEditor: FC<RichTextEditorProps> = ({
       }}
     >
       <ReactQuill
-        value={value?.html}
         ref={quillRef}
         onChange={handleChange}
         modules={modules}

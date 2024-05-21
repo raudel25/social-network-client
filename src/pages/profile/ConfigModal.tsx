@@ -52,6 +52,16 @@ const ConfigModal: FC<ConfigModalProps> = ({
   const [formState, setFormState] = useState<ProfileForm>(form);
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
+  const [errorForm, setErrorForm] = useState<string>("");
+
+  const validate = () => {
+    if (formState.name.length === 0) {
+      setErrorForm("Name is required");
+      return false;
+    }
+
+    return true;
+  };
 
   const step0 = () => (
     <div className="config-photo-container">
@@ -116,6 +126,8 @@ const ConfigModal: FC<ConfigModalProps> = ({
     <div className="mt-5 ml-5 mr-5">
       <div className="mb-5">
         <TextField
+          error={errorForm !== ""}
+          helperText={errorForm}
           fullWidth
           placeholder="Name"
           label="Name"
@@ -194,7 +206,11 @@ const ConfigModal: FC<ConfigModalProps> = ({
             variant="outlined"
             style={{ width: 300, fontSize: 16 }}
             onClick={
-              step === 2 ? () => handleOk(formState) : () => setStep(step + 1)
+              step === 2
+                ? () => {
+                    if (validate()) handleOk(formState);
+                  }
+                : () => setStep(step + 1)
             }
           >
             {step === 2 ? "Save" : "Next"}

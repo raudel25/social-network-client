@@ -7,7 +7,7 @@ import {
   Tabs,
   Typography,
 } from "@mui/material";
-import { Profile } from "../../types/profile";
+import { Profile, ProfileForm } from "../../types/profile";
 import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { profileService } from "../../api/profile";
@@ -18,6 +18,8 @@ import { useTheme } from "@mui/material/styles";
 import { UserContext } from "../../context/UserProvider";
 import Tab from "@mui/material/Tab";
 import ConfigModal from "./ConfigModal";
+import { displayPhoto } from "../../common/common";
+import parse from "html-react-parser";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -53,12 +55,12 @@ function a11yProps(index: number) {
 }
 
 const ProfilePage = () => {
-  const { getByUsername } = profileService();
+  const { getByUsername, updateProfile } = profileService();
 
   const { username } = useParams();
 
   const theme = useTheme();
-  const { user } = useContext(UserContext);
+  const { user, setUser } = useContext(UserContext);
 
   const [loading, setLoading] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
@@ -76,6 +78,20 @@ const ProfilePage = () => {
     }
 
     setProfile(response.value);
+  };
+
+  const editProfile = async (form: ProfileForm) => {
+    setLoading(true);
+    const response = await updateProfile(form);
+    setLoading(false);
+
+    if (!response.ok) {
+      setErrorMessage(response.message);
+      return;
+    }
+
+    setProfile(profile ? { ...profile, ...form } : undefined);
+    setUser({ ...user!, profile: { ...user!.profile, ...form } });
   };
 
   useEffect(() => {
@@ -123,10 +139,13 @@ const ProfilePage = () => {
                   className="profile-banner"
                   style={{
                     backgroundColor: theme.palette.primary.main,
-                    // backgroundImage: profile.bannerPhoto?.src,
+                    backgroundImage: displayPhoto(profile.bannerPhotoId),
                   }}
                 ></div>
-                <Avatar className="profile-avatar"></Avatar>
+                <Avatar
+                  className="profile-avatar"
+                  src={displayPhoto(profile.profilePhotoId)}
+                ></Avatar>
                 <div className="profile-btn">
                   <Button variant="outlined" onClick={handleProfileBtn}>
                     {user?.profile.id === profile.id
@@ -141,28 +160,28 @@ const ProfilePage = () => {
               <Typography variant="body1" color="textSecondary">
                 @{profile.username}
               </Typography>
-              <div className="mt-5">
-                <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-                  <Tabs
-                    value={value}
-                    onChange={handleChange}
-                    aria-label="basic tabs example"
-                  >
-                    <Tab label="Posts" {...a11yProps(0)} />
-                    <Tab label="Followers" {...a11yProps(1)} />
-                    <Tab label="Following" {...a11yProps(2)} />
-                  </Tabs>
-                </Box>
-                <CustomTabPanel value={value} index={0}>
-                  Item One
-                </CustomTabPanel>
-                <CustomTabPanel value={value} index={1}>
-                  Item Two
-                </CustomTabPanel>
-                <CustomTabPanel value={value} index={2}>
-                  Item Three
-                </CustomTabPanel>
-              </div>
+              <div className="mt-5">{parse(profile.richText?.html ?? "")}</div>
+              <div className="mt-5"></div>
+              <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+                <Tabs
+                  value={value}
+                  onChange={handleChange}
+                  aria-label="basic tabs example"
+                >
+                  <Tab label="Posts" {...a11yProps(0)} />
+                  <Tab label="Followers" {...a11yProps(1)} />
+                  <Tab label="Following" {...a11yProps(2)} />
+                </Tabs>
+              </Box>
+              <CustomTabPanel value={value} index={0}>
+                Item One
+              </CustomTabPanel>
+              <CustomTabPanel value={value} index={1}>
+                Item Two
+              </CustomTabPanel>
+              <CustomTabPanel value={value} index={2}>
+                Item Three
+              </CustomTabPanel>
             </div>
           </div>
         </>
@@ -173,11 +192,15 @@ const ProfilePage = () => {
         <ConfigModal
           open={openModal}
           handleClose={() => setOpenModal(false)}
-          handleOk={() => {}}
+          handleOk={(form: ProfileForm) => {
+            setOpenModal(false);
+            editProfile(form);
+          }}
           form={{
             profilePhotoId: user.profile.profilePhotoId,
             bannerPhotoId: user.profile.bannerPhotoId,
             name: user.profile.name,
+            richText: user.profile.richText,
           }}
         />
       )}

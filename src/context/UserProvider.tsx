@@ -4,10 +4,12 @@ import { User } from "../types/auth";
 
 export const UserContext = createContext<{
   user: User | null;
+  setUser: (user: User) => void;
   login: (user: User) => void;
   logout: () => void;
 }>({
   user: null,
+  setUser: (user: User) => {},
   login: () => {},
   logout: () => {},
 });
@@ -36,7 +38,7 @@ export const UserProvider: FC<UserProviderProps> = ({ children }) => {
   };
 
   return (
-    <UserContext.Provider value={{ user, login, logout }}>
+    <UserContext.Provider value={{ user, login, logout, setUser }}>
       {children}
     </UserContext.Provider>
   );

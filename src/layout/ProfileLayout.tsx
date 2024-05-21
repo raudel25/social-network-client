@@ -3,6 +3,7 @@ import { Avatar, Menu, MenuItem, Typography } from "@mui/material";
 import MoreHorzIcon from "@mui/icons-material/MoreHoriz";
 import { UserContext } from "../context/UserProvider";
 import { Logout } from "@mui/icons-material";
+import { displayPhoto } from "../common/common";
 
 const ProfileLayout = () => {
   const { user, logout } = useContext(UserContext);
@@ -23,7 +24,10 @@ const ProfileLayout = () => {
   return (
     <div>
       <div className="avatar-container" onClick={handleOpen}>
-        <Avatar alt={user?.username} src="" />
+        <Avatar
+          alt={user?.username}
+          src={displayPhoto(user?.profile.profilePhotoId)}
+        />
         <div className="ml-2 mr-1">
           <Typography
             variant="body1"
