@@ -23,7 +23,7 @@ const ProfileLayout = () => {
   return (
     <div>
       <div className="avatar-container" onClick={handleOpen}>
-        <Avatar alt={user?.username} src={user?.profile.bannerPhoto?.src} />
+        <Avatar alt={user?.username} src="" />
         <div className="ml-2 mr-1">
           <Typography
             variant="body1"

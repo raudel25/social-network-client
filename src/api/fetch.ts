@@ -95,3 +95,29 @@ export async function apiNoToken<T1, T2>(
     };
   }
 }
+
+export async function uploadPhoto(file: File) {
+  const formData = new FormData();
+  formData.append("file", file);
+
+  const token =
+    localStorage.getItem("token") ?? sessionStorage.getItem("token") ?? "";
+
+  try {
+    const resp = await fetch(`${baseUrl}/photo/upload`, {
+      method: HttpMethods.POST,
+      body: formData,
+      headers: {
+        Authorization: token,
+      },
+    });
+    const body = await resp.json();
+
+    return { ok: body.ok, message: body.message, value: body.data as number };
+  } catch {
+    return {
+      ok: false,
+      message: "Connection error",
+    };
+  }
+}

@@ -123,14 +123,14 @@ const ProfilePage = () => {
                   className="profile-banner"
                   style={{
                     backgroundColor: theme.palette.primary.main,
-                    backgroundImage: profile.bannerPhoto?.src,
+                    // backgroundImage: profile.bannerPhoto?.src,
                   }}
                 ></div>
                 <Avatar className="profile-avatar"></Avatar>
                 <div className="profile-btn">
                   <Button variant="outlined" onClick={handleProfileBtn}>
                     {user?.profile.id === profile.id
-                      ? "Config profile"
+                      ? "Profile Configuration"
                       : profile.follow
                       ? "Following"
                       : "Follow"}
@@ -169,7 +169,18 @@ const ProfilePage = () => {
       ) : (
         <NoItemsV1 />
       )}
-      <ConfigModal open={openModal} handleClose={() => setOpenModal(false)} />
+      {user && (
+        <ConfigModal
+          open={openModal}
+          handleClose={() => setOpenModal(false)}
+          handleOk={() => {}}
+          form={{
+            profilePhotoId: user.profile.profilePhotoId,
+            bannerPhotoId: user.profile.bannerPhotoId,
+            name: user.profile.name,
+          }}
+        />
+      )}
     </>
   );
 };

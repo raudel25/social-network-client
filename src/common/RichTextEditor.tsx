@@ -39,10 +39,15 @@ const formats = [
 
 interface RichTextEditorProps {
   placeholder?: string;
+  value?: RichText;
   onChange: (value: RichText) => void;
 }
 
-const RichTextEditor: FC<RichTextEditorProps> = ({ placeholder, onChange }) => {
+const RichTextEditor: FC<RichTextEditorProps> = ({
+  value,
+  placeholder,
+  onChange,
+}) => {
   const quillRef = useRef<ReactQuill | null>(null);
 
   const handleChange = (content: string) => {
@@ -56,21 +61,22 @@ const RichTextEditor: FC<RichTextEditorProps> = ({ placeholder, onChange }) => {
     <Box
       sx={{
         border: "1px solid #ccc",
-        borderRadius: "4px",
+        borderRadius: "20px",
         minHeight: "300px",
         mb: 2,
         "& .ql-toolbar": {
-          borderTopLeftRadius: "4px",
-          borderTopRightRadius: "4px",
+          borderTopLeftRadius: "20px",
+          borderTopRightRadius: "20px",
         },
         "& .ql-container": {
-          borderBottomLeftRadius: "4px",
-          borderBottomRightRadius: "4px",
+          borderBottomLeftRadius: "20px",
+          borderBottomRightRadius: "20px",
           minHeight: "250px",
         },
       }}
     >
       <ReactQuill
+        value={value?.html}
         ref={quillRef}
         onChange={handleChange}
         modules={modules}

@@ -35,7 +35,7 @@ const Suggestions = () => {
           className="profile-recommendation-name pointer"
           onClick={() => navigate(`../profile/${p.username}`)}
         >
-          <Avatar alt={p.username} src={p.bannerPhoto?.src} />
+          <Avatar alt={p.username} src="" />
           <div className="ml-2 mr-1 ">
             <Link
               variant="body1"

@@ -1,11 +1,23 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
-import { Avatar, Button, Grid, IconButton } from "@mui/material";
+import {
+  Avatar,
+  Button,
+  Grid,
+  IconButton,
+  TextField,
+  useTheme,
+} from "@mui/material";
 import { ArrowBack, Close } from "@mui/icons-material";
 import RichTextEditor from "../../common/RichTextEditor";
+import { ProfileForm } from "../../types/profile";
+import UploadPhoto, { UploadPhotoState } from "../../context/UploadPhoto";
+import MessageSnackbar from "../../common/MessageSnackbar";
+import MySpin from "../../layout/MySpin";
+import { displayPhoto } from "../../common/common";
 
 const style = {
   position: "absolute" as "absolute",
@@ -24,18 +36,42 @@ const style = {
 
 interface ConfigModalProps {
   open: boolean;
+  form: ProfileForm;
+  handleOk: (form: ProfileForm) => void;
   handleClose: () => void;
 }
 
-const ConfigModal: FC<ConfigModalProps> = ({ open, handleClose }) => {
+const ConfigModal: FC<ConfigModalProps> = ({
+  open,
+  handleClose,
+  handleOk,
+  form,
+}) => {
+  const theme = useTheme();
   const [step, setStep] = useState<number>(0);
+  const [formState, setFormState] = useState<ProfileForm>(form);
+  const [errorMessage, setErrorMessage] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
 
   const step0 = () => (
     <div className="config-photo-container">
-      <Avatar style={{ width: 250, height: 250 }} />
+      <Avatar
+        style={{ width: 250, height: 250 }}
+        src={displayPhoto(formState.profilePhotoId)}
+      />
       <div className="config-photo">
-        <IconButton>
+        <IconButton component="label" role={undefined} tabIndex={-1}>
           <AddAPhotoIcon fontSize="large" />
+          <UploadPhoto
+            onChange={(state: UploadPhotoState) => {
+              if (state.ok) {
+                setFormState({ ...formState, profilePhotoId: state.id });
+              } else {
+                setErrorMessage(state.error || "Error uploading photo");
+              }
+            }}
+            setLoading={(loading: boolean) => setLoading(loading)}
+          />
         </IconButton>
       </div>
     </div>
@@ -43,21 +79,58 @@ const ConfigModal: FC<ConfigModalProps> = ({ open, handleClose }) => {
 
   const step1 = () => (
     <div className="config-photo-container">
-      <img style={{ width: 500, height: 200 }} src="" alt="" />
+      {formState.bannerPhotoId ? (
+        <img
+          style={{ width: 500, height: 200 }}
+          src={displayPhoto(formState.bannerPhotoId)}
+          alt="banner"
+        />
+      ) : (
+        <div
+          style={{
+            backgroundColor: theme.palette.primary.main,
+            width: 500,
+            height: 200,
+          }}
+        ></div>
+      )}
       <div className="config-photo">
-        <IconButton>
+        <IconButton component="label" role={undefined} tabIndex={-1}>
           <AddAPhotoIcon fontSize="large" />
+          <UploadPhoto
+            onChange={(state: UploadPhotoState) => {
+              if (state.ok) {
+                setFormState({ ...formState, bannerPhotoId: state.id });
+              } else {
+                setErrorMessage(state.error || "Error uploading photo");
+              }
+            }}
+            setLoading={(loading: boolean) => setLoading(loading)}
+          />
         </IconButton>
       </div>
     </div>
   );
 
   const step2 = () => (
-    <div className="mt-10 ml-5 mr-5">
+    <div className="mt-5 ml-5 mr-5">
+      <div className="mb-5">
+        <TextField
+          fullWidth
+          placeholder="Name"
+          label="Name"
+          autoFocus
+          value={formState.name}
+          onChange={(value) =>
+            setFormState({ ...formState, name: value.target.value })
+          }
+        />
+      </div>
+
       <RichTextEditor
-        onChange={(e) => {
-          console.log(e);
-        }}
+        placeholder="Describe your self"
+        value={formState?.richText}
+        onChange={(e) => setFormState({ ...formState, richText: e })}
       />
     </div>
   );
@@ -68,7 +141,7 @@ const ConfigModal: FC<ConfigModalProps> = ({ open, handleClose }) => {
       case 1:
         return "Select a banner photo";
       case 2:
-        return "Describe your self";
+        return "Personal data";
     }
   };
 
@@ -82,6 +155,11 @@ const ConfigModal: FC<ConfigModalProps> = ({ open, handleClose }) => {
         return step2();
     }
   };
+
+  useEffect(() => {
+    setStep(0);
+    setFormState(form);
+  }, [open, form]);
 
   return (
     <Modal
@@ -115,11 +193,19 @@ const ConfigModal: FC<ConfigModalProps> = ({ open, handleClose }) => {
           <Button
             variant="outlined"
             style={{ width: 300, fontSize: 16 }}
-            onClick={step === 2 ? () => {} : () => setStep(step + 1)}
+            onClick={
+              step === 2 ? () => handleOk(formState) : () => setStep(step + 1)
+            }
           >
             {step === 2 ? "Save" : "Next"}
           </Button>
         </div>
+        <MessageSnackbar
+          open={errorMessage.length !== 0}
+          handleClose={() => setErrorMessage("")}
+          message={errorMessage}
+        />
+        <MySpin loading={loading} />
       </Box>
     </Modal>
   );
