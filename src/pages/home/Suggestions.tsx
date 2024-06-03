@@ -12,6 +12,7 @@ import MessageSnackbar from "../../common/MessageSnackbar";
 import { Pagination } from "../../types/api";
 import { NoItemsV2 } from "../../common/NoItems";
 import { useNavigate } from "react-router-dom";
+import { displayPhoto } from "../../common/common";
 
 const Suggestions = () => {
   const { getProfiles } = profileService();
@@ -30,12 +31,12 @@ const Suggestions = () => {
 
   const getProfile = (p: Profile) => {
     return (
-      <div className="profile-recommendation-container">
+      <div className="profile-recommendation-container" key={p.id}>
         <div
           className="profile-recommendation-name pointer"
           onClick={() => navigate(`../profile/${p.username}`)}
         >
-          <Avatar alt={p.username} src="" />
+          <Avatar alt={p.username} src={displayPhoto(p.profilePhotoId)} />
           <div className="ml-2 mr-1 ">
             <Link
               variant="body1"

@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import { Profile, ProfileForm } from "../../types/profile";
 import { useContext, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { profileService } from "../../api/profile";
 import MessageSnackbar from "../../common/MessageSnackbar";
 import MySpin from "../../layout/MySpin";
@@ -20,6 +20,7 @@ import Tab from "@mui/material/Tab";
 import ConfigModal from "./ConfigModal";
 import { displayPhoto } from "../../common/common";
 import parse from "html-react-parser";
+import ProfileItems from "./ProfileItems";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -38,11 +39,7 @@ function CustomTabPanel(props: TabPanelProps) {
       aria-labelledby={`simple-tab-${index}`}
       {...other}
     >
-      {value === index && (
-        <Box sx={{ p: 3 }}>
-          <Typography>{children}</Typography>
-        </Box>
-      )}
+      {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
     </div>
   );
 }
@@ -55,9 +52,11 @@ function a11yProps(index: number) {
 }
 
 const ProfilePage = () => {
-  const { getByUsername, updateProfile } = profileService();
+  const { getByUsername, updateProfile, getByFollower, getByFollowed } =
+    profileService();
 
   const { username } = useParams();
+  const navigate = useNavigate();
 
   const theme = useTheme();
   const { user, setUser } = useContext(UserContext);
@@ -66,6 +65,7 @@ const ProfilePage = () => {
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [profile, setProfile] = useState<Profile | undefined>(undefined);
   const [openModal, setOpenModal] = useState<boolean>(false);
+  const [value, setValue] = useState(0);
 
   const loadProfile = async (username: string) => {
     setLoading(true);
@@ -97,10 +97,10 @@ const ProfilePage = () => {
   useEffect(() => {
     if (username) loadProfile(username);
     else setErrorMessage("Profile not found");
+
+    setValue(0);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [username]);
-
-  const [value, setValue] = useState(0);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
@@ -125,7 +125,7 @@ const ProfilePage = () => {
       {profile ? (
         <>
           <div className="profile-header">
-            <IconButton>
+            <IconButton onClick={() => navigate(-1)}>
               <ArrowBack />
             </IconButton>
             <div className="ml-1">
@@ -177,10 +177,16 @@ const ProfilePage = () => {
                 Item One
               </CustomTabPanel>
               <CustomTabPanel value={value} index={1}>
-                Item Two
+                <ProfileItems
+                  load={(query: any) => getByFollowed(profile.username, query)}
+                  setErrorMessage={setErrorMessage}
+                />
               </CustomTabPanel>
               <CustomTabPanel value={value} index={2}>
-                Item Three
+                <ProfileItems
+                  load={(query: any) => getByFollower(profile.username, query)}
+                  setErrorMessage={setErrorMessage}
+                />
               </CustomTabPanel>
             </div>
           </div>

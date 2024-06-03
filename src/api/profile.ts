@@ -20,6 +20,27 @@ export const profileService = () => {
     method<{}, Profile>(HttpMethods.GET, {}, username);
   const updateProfile = (data: ProfileForm) =>
     method<ProfileForm, {}>(HttpMethods.PUT, data);
+  const getByFollowed = (username: string, query: any) =>
+    method<{}, Pagination<Profile>>(
+      HttpMethods.GET,
+      {},
+      `followed/${username}`,
+      query
+    );
 
-  return { getProfiles, getByUsername, updateProfile };
+  const getByFollower = (username: string, query: any) =>
+    method<{}, Pagination<Profile>>(
+      HttpMethods.GET,
+      {},
+      `follower/${username}`,
+      query
+    );
+
+  return {
+    getProfiles,
+    getByUsername,
+    updateProfile,
+    getByFollowed,
+    getByFollower,
+  };
 };

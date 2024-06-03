@@ -59,3 +59,26 @@
   left: 50%;
   transform: translate(-50%, -50%);
 }
+
+.profile-items-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  column-gap: 5px;
+  row-gap: 5px;
+}
+
+.profile-item-name {
+  display: flex;
+  align-items: center;
+}
+
+.profile-items-description {
+  margin-top: 5px;
+  margin-left: 60px;
+}
+
+.profile-items-container {
+  margin-bottom: 15px;
+}
