@@ -8,6 +8,7 @@ import {
   Button,
   Grid,
   IconButton,
+  LinearProgress,
   TextField,
   useTheme,
 } from "@mui/material";
@@ -15,8 +16,6 @@ import { ArrowBack, Close } from "@mui/icons-material";
 import RichTextEditor from "../../common/RichTextEditor";
 import { ProfileForm } from "../../types/profile";
 import UploadPhoto, { UploadPhotoState } from "../../context/UploadPhoto";
-import MessageSnackbar from "../../common/MessageSnackbar";
-import MySpin from "../../layout/MySpin";
 import { displayPhoto } from "../../common/common";
 
 const style = {
@@ -39,6 +38,7 @@ interface ConfigModalProps {
   form: ProfileForm;
   handleOk: (form: ProfileForm) => void;
   handleClose: () => void;
+  setErrorMessage: (message: string) => void;
 }
 
 const ConfigModal: FC<ConfigModalProps> = ({
@@ -46,13 +46,13 @@ const ConfigModal: FC<ConfigModalProps> = ({
   handleClose,
   handleOk,
   form,
+  setErrorMessage,
 }) => {
   const theme = useTheme();
   const [step, setStep] = useState<number>(0);
   const [formState, setFormState] = useState<ProfileForm>(form);
-  const [errorMessage, setErrorMessage] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(false);
   const [errorForm, setErrorForm] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
 
   const validate = () => {
     if (formState.name.length === 0) {
@@ -80,7 +80,7 @@ const ConfigModal: FC<ConfigModalProps> = ({
                 setErrorMessage(state.error || "Error uploading photo");
               }
             }}
-            setLoading={(loading: boolean) => setLoading(loading)}
+            setLoading={setLoading}
           />
         </IconButton>
       </div>
@@ -115,7 +115,7 @@ const ConfigModal: FC<ConfigModalProps> = ({
                 setErrorMessage(state.error || "Error uploading photo");
               }
             }}
-            setLoading={(loading: boolean) => setLoading(loading)}
+            setLoading={setLoading}
           />
         </IconButton>
       </div>
@@ -201,6 +201,12 @@ const ConfigModal: FC<ConfigModalProps> = ({
           </Grid>
         </Grid>
         {getStep()}
+
+        {loading && (
+          <div className="mb-10">
+            <LinearProgress />
+          </div>
+        )}
         <div className="center-content" style={{ marginTop: "auto" }}>
           <Button
             variant="outlined"
@@ -216,12 +222,6 @@ const ConfigModal: FC<ConfigModalProps> = ({
             {step === 2 ? "Save" : "Next"}
           </Button>
         </div>
-        <MessageSnackbar
-          open={errorMessage.length !== 0}
-          handleClose={() => setErrorMessage("")}
-          message={errorMessage}
-        />
-        <MySpin loading={loading} />
       </Box>
     </Modal>
   );

@@ -190,6 +190,7 @@ const ProfilePage = () => {
       )}
       {user && (
         <ConfigModal
+          setErrorMessage={setErrorMessage}
           open={openModal}
           handleClose={() => setOpenModal(false)}
           handleOk={(form: ProfileForm) => {
