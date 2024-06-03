@@ -5,13 +5,15 @@ import {
   Link,
   Typography,
 } from "@mui/material";
-import { FC, useEffect, useState } from "react";
+import { FC, useContext, useEffect, useState } from "react";
 import { Profile } from "../../types/profile";
 import { useNavigate } from "react-router-dom";
 import { ApiResponse, Pagination } from "../../types/api";
 import { displayPhoto } from "../../common/common";
 import parse from "html-react-parser";
 import { NoItemsV2 } from "../../common/NoItems";
+import { profileService } from "../../api/profile";
+import { UserContext } from "../../context/UserProvider";
 
 interface ProfileItemsProps {
   load: (query: any) => Promise<ApiResponse<Pagination<Profile>>>;
@@ -20,6 +22,10 @@ interface ProfileItemsProps {
 
 const ProfileItems: FC<ProfileItemsProps> = ({ load, setErrorMessage }) => {
   const navigate = useNavigate();
+
+  const { followUnFollow } = profileService();
+
+  const { user } = useContext(UserContext);
 
   const [loading, setLoading] = useState<boolean>(false);
   const [pagination, setPagination] = useState<Pagination<Profile>>({
@@ -53,6 +59,24 @@ const ProfileItems: FC<ProfileItemsProps> = ({ load, setErrorMessage }) => {
     );
   };
 
+  const handleFollowUnFollow = async (id: number) => {
+    setLoading(true);
+    const response = await followUnFollow(id);
+    setLoading(false);
+
+    if (!response.ok) {
+      setErrorMessage(response.message);
+      return;
+    }
+
+    setPagination({
+      ...pagination,
+      rows: pagination.rows.map((p) =>
+        p.id === id ? { ...p, follow: !p.follow } : p
+      ),
+    });
+  };
+
   useEffect(() => {
     loadProfiles(true);
 
@@ -84,11 +108,16 @@ const ProfileItems: FC<ProfileItemsProps> = ({ load, setErrorMessage }) => {
             </Typography>
           </div>
         </div>
-        <div className="follow-btn">
-          <Button variant="contained">
-            {profile.follow ? "Following" : "Follow"}
-          </Button>
-        </div>
+        {user?.profile.id !== profile.id && (
+          <div className="follow-btn">
+            <Button
+              variant="contained"
+              onClick={() => handleFollowUnFollow(profile.id)}
+            >
+              {profile.follow ? "Following" : "Follow"}
+            </Button>
+          </div>
+        )}
       </div>
       <div className="profile-items-description">
         {parse(profile.richText?.html ?? "")}

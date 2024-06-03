@@ -17,6 +17,8 @@ import { displayPhoto } from "../../common/common";
 const Suggestions = () => {
   const { getProfiles } = profileService();
 
+  const { followUnFollow } = profileService();
+
   const navigate = useNavigate();
 
   const [loading, setLoading] = useState<boolean>(false);
@@ -28,6 +30,24 @@ const Suggestions = () => {
     rows: [],
   });
   const [errorMessage, setErrorMessage] = useState<string>("");
+
+  const handleFollowUnFollow = async (id: number) => {
+    setLoading(true);
+    const response = await followUnFollow(id);
+    setLoading(false);
+
+    if (!response.ok) {
+      setErrorMessage(response.message);
+      return;
+    }
+
+    setPagination({
+      ...pagination,
+      rows: pagination.rows.map((p) =>
+        p.id === id ? { ...p, follow: !p.follow } : p
+      ),
+    });
+  };
 
   const getProfile = (p: Profile) => {
     return (
@@ -51,7 +71,12 @@ const Suggestions = () => {
           </div>
         </div>
         <div className="follow-btn">
-          <Button variant="contained">Follow</Button>
+          <Button
+            variant="contained"
+            onClick={() => handleFollowUnFollow(p.id)}
+          >
+            {p.follow ? "Following" : "Follow"}
+          </Button>
         </div>
       </div>
     );

@@ -52,8 +52,13 @@ function a11yProps(index: number) {
 }
 
 const ProfilePage = () => {
-  const { getByUsername, updateProfile, getByFollower, getByFollowed } =
-    profileService();
+  const {
+    getByUsername,
+    updateProfile,
+    getByFollower,
+    getByFollowed,
+    followUnFollow,
+  } = profileService();
 
   const { username } = useParams();
   const navigate = useNavigate();
@@ -92,6 +97,19 @@ const ProfilePage = () => {
 
     setProfile(profile ? { ...profile, ...form } : undefined);
     setUser({ ...user!, profile: { ...user!.profile, ...form } });
+  };
+
+  const handleFollowUnFollow = async () => {
+    setLoading(true);
+    const response = await followUnFollow(profile?.id ?? 0);
+    setLoading(false);
+
+    if (!response.ok) {
+      setErrorMessage(response.message);
+      return;
+    }
+
+    setProfile(profile ? { ...profile, follow: !profile?.follow } : undefined);
   };
 
   useEffect(() => {
@@ -147,13 +165,15 @@ const ProfilePage = () => {
                   src={displayPhoto(profile.profilePhotoId)}
                 ></Avatar>
                 <div className="profile-btn">
-                  <Button variant="outlined" onClick={handleProfileBtn}>
-                    {user?.profile.id === profile.id
-                      ? "Profile Configuration"
-                      : profile.follow
-                      ? "Following"
-                      : "Follow"}
-                  </Button>
+                  {user?.profile.id === profile.id ? (
+                    <Button variant="outlined" onClick={handleProfileBtn}>
+                      Profile Configuration
+                    </Button>
+                  ) : (
+                    <Button variant="outlined" onClick={handleFollowUnFollow}>
+                      {profile.follow ? "Following" : "Follow"}
+                    </Button>
+                  )}
                 </div>
               </div>
               <Typography variant="h5">{profile.name}</Typography>

@@ -36,11 +36,15 @@ export const profileService = () => {
       query
     );
 
+  const followUnFollow = (id: number) =>
+    method<{}, {}>(HttpMethods.POST, {}, `followUnFollow/${id}`);
+
   return {
     getProfiles,
     getByUsername,
     updateProfile,
     getByFollowed,
     getByFollower,
+    followUnFollow,
   };
 };
