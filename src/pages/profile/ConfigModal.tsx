@@ -141,7 +141,7 @@ const ConfigModal: FC<ConfigModalProps> = ({
 
       <RichTextEditor
         placeholder="Describe your self"
-        value={formState?.richText}
+        defaultValue={form?.richText}
         onChange={(e) => setFormState({ ...formState, richText: e })}
       />
     </div>
@@ -214,7 +214,9 @@ const ConfigModal: FC<ConfigModalProps> = ({
             onClick={
               step === 2
                 ? () => {
-                    if (validate()) handleOk(formState);
+                    if (validate()) {
+                      handleOk(formState);
+                    }
                   }
                 : () => setStep(step + 1)
             }

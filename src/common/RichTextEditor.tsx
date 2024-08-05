@@ -1,90 +1,52 @@
-import { FC, useRef } from "react";
-import ReactQuill from "react-quill";
-import "react-quill/dist/quill.snow.css";
-import { Box } from "@mui/material";
+import React, { FC, useState, useEffect } from "react";
 import { RichText } from "../types/api";
-
-const modules = {
-  toolbar: [
-    [{ header: "1" }, { header: "2" }, { font: [] }],
-    [{ size: [] }],
-    ["bold", "italic", "underline", "strike", "blockquote"],
-    [
-      { list: "ordered" },
-      { list: "bullet" },
-      { indent: "-1" },
-      { indent: "+1" },
-    ],
-    ["link", "image", "video"],
-    ["clean"],
-  ],
-};
-
-const formats = [
-  "header",
-  "font",
-  "size",
-  "bold",
-  "italic",
-  "underline",
-  "strike",
-  "blockquote",
-  "list",
-  "bullet",
-  "indent",
-  "link",
-  "image",
-  "video",
-];
+import MUIRichTextEditor, { TMUIRichTextEditorProps } from "mui-rte";
+import { EditorState, convertToRaw } from "draft-js";
+import { stateToHTML } from "draft-js-export-html";
+import { stateFromHTML } from "draft-js-import-html";
 
 interface RichTextEditorProps {
   placeholder?: string;
-  value?: RichText;
+  defaultValue?: RichText;
   onChange: (value: RichText) => void;
 }
 
 const RichTextEditor: FC<RichTextEditorProps> = ({
-  value,
+  defaultValue,
   placeholder,
   onChange,
 }) => {
-  const quillRef = useRef<ReactQuill | null>(null);
-
-  const handleChange = (content: string) => {
-    if (quillRef.current) {
-      const editor = quillRef.current.getEditor();
-      const plainText = editor.getText();
-      onChange({ html: content, text: plainText });
+  const [defaultContent, setDefaultContent] = useState<string>(() => {
+    if (defaultValue?.html) {
+      const contentState = stateFromHTML(defaultValue.html);
+      return JSON.stringify(convertToRaw(contentState));
     }
+    return "";
+  });
+
+  useEffect(() => {
+    if (defaultValue?.html) {
+      const contentState = stateFromHTML(defaultValue.html);
+      setDefaultContent(JSON.stringify(convertToRaw(contentState)));
+    }
+  }, [defaultValue]);
+
+  const handleEditorChange = (state: EditorState) => {
+    const contentState = state.getCurrentContent();
+    const rawContent = convertToRaw(contentState);
+    const html = stateToHTML(contentState);
+    const plainText = rawContent.blocks.map((block) => block.text).join("\n");
+
+    onChange({ html, text: plainText });
   };
 
-  return (
-    <Box
-      sx={{
-        border: "1px solid #ccc",
-        borderRadius: "20px",
-        minHeight: "300px",
-        mb: 2,
-        "& .ql-toolbar": {
-          borderTopLeftRadius: "20px",
-          borderTopRightRadius: "20px",
-        },
-        "& .ql-container": {
-          borderBottomLeftRadius: "20px",
-          borderBottomRightRadius: "20px",
-          minHeight: "250px",
-        },
-      }}
-    >
-      <ReactQuill
-        ref={quillRef}
-        onChange={handleChange}
-        modules={modules}
-        formats={formats}
-        placeholder={placeholder}
-      />
-    </Box>
-  );
+  const editorProps: TMUIRichTextEditorProps = {
+    label: placeholder,
+    defaultValue: defaultContent,
+    onChange: handleEditorChange,
+  };
+
+  return <MUIRichTextEditor {...editorProps} />;
 };
 
 export default RichTextEditor;
