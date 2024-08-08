@@ -1,5 +1,5 @@
-import { HttpMethods } from "../types/api";
-import { PostForm } from "../types/home";
+import { HttpMethods, Pagination } from "../types/api";
+import { Post, PostForm } from "../types/post";
 import { apiWithToken } from "./fetch";
 
 export const postService = () => {
@@ -16,5 +16,13 @@ export const postService = () => {
   const newPost = (data: PostForm) =>
     method<PostForm, {}>(HttpMethods.POST, data);
 
-  return { newPost };
+  const getByUsername = (username: string, query: any) =>
+    method<{}, Pagination<Post>>(
+      HttpMethods.GET,
+      {},
+      `user/${username}`,
+      query
+    );
+
+  return { newPost, getByUsername };
 };

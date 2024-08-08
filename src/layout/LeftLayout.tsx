@@ -13,7 +13,7 @@ import PersonIcon from "@mui/icons-material/Person";
 import { useNavigate } from "react-router-dom";
 import { useContext, useState } from "react";
 import { UserContext } from "../context/UserProvider";
-import PostModal from "../pages/home/PostModal";
+import PostModal from "../pages/post/PostModal";
 import MySpin from "./MySpin";
 import MessageSnackbar from "../common/MessageSnackbar";
 

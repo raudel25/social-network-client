@@ -5,7 +5,7 @@ import { FC, useEffect, useState } from "react";
 import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
 import RichTextEditor from "../../common/RichTextEditor";
 import UploadPhoto, { UploadPhotoState } from "../../context/UploadPhoto";
-import { PostForm } from "../../types/home";
+import { PostForm } from "../../types/post";
 import { displayPhoto } from "../../common/common";
 import { postService } from "../../api/post";
 

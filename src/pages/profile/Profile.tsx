@@ -21,6 +21,8 @@ import ConfigModal from "./ConfigModal";
 import { displayPhoto } from "../../common/common";
 import parse from "html-react-parser";
 import ProfileItems from "./ProfileItems";
+import { postService } from "../../api/post";
+import PostItems from "../post/PostItems";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -59,6 +61,8 @@ const ProfilePage = () => {
     getByFollowed,
     followUnFollow,
   } = profileService();
+
+  const { getByUsername: getPostByUsername } = postService();
 
   const { username } = useParams();
   const navigate = useNavigate();
@@ -194,7 +198,12 @@ const ProfilePage = () => {
                 </Tabs>
               </Box>
               <CustomTabPanel value={value} index={0}>
-                Item One
+                <PostItems
+                  load={(query: any) =>
+                    getPostByUsername(profile.username, query)
+                  }
+                  setErrorMessage={setErrorMessage}
+                />
               </CustomTabPanel>
               <CustomTabPanel value={value} index={1}>
                 <ProfileItems
