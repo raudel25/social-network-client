@@ -17,11 +17,3 @@ export interface Post {
   cantReactions: number;
   cantMessages: number;
 }
-// Profile       ProfileResponse `json:"profile"`
-// 	PhotoID       uint          `json:"photoId"`
-// 	RichText      *RichText        `json:"richText"`
-// 	RePost        *PostResponse   `json:"rePost"`
-// 	Reaction      bool            `json:"reaction"`
-// 	CantReactions int             `json:"cantReactions"`
-// 	CantMessages  int             `json:"cantMessages"`
-// 	Date          time.Time       `json:"date"`

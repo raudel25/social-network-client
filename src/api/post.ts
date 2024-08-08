@@ -24,5 +24,8 @@ export const postService = () => {
       query
     );
 
-  return { newPost, getByUsername };
+  const reaction = (id: number) =>
+    method<{}, {}>(HttpMethods.POST, {}, `reaction/${id}`);
+
+  return { newPost, getByUsername, reaction };
 };
