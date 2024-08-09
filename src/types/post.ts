@@ -17,4 +17,5 @@ export interface Post {
   cantRePosts: number;
   cantReactions: number;
   cantMessages: number;
+  date: string;
 }

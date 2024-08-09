@@ -8,7 +8,7 @@ import {
   Link,
   Typography,
 } from "@mui/material";
-import { NoItemsV2 } from "../../common/NoItems";
+import { NoItemsV1, NoItemsV2 } from "../../common/NoItems";
 import { useNavigate } from "react-router-dom";
 import { displayPhoto } from "../../common/common";
 import parse from "html-react-parser";
@@ -18,13 +18,20 @@ import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlin
 import FavoriteOutlinedIcon from "@mui/icons-material/FavoriteOutlined";
 import { postService } from "../../api/post";
 import PostModal from "./PostModal";
+import dayjs from "dayjs";
+import MySpin from "../../layout/MySpin";
 
 interface PostItemsProps {
+  allWindow?: boolean;
   load: (query: any) => Promise<ApiResponse<Pagination<Post>>>;
   setErrorMessage: (errorMessage: string) => void;
 }
 
-const PostItems: FC<PostItemsProps> = ({ load, setErrorMessage }) => {
+const PostItems: FC<PostItemsProps> = ({
+  load,
+  setErrorMessage,
+  allWindow = false,
+}) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [rePost, setRePost] = useState<number | undefined>();
   const [pagination, setPagination] = useState<Pagination<Post>>({
@@ -116,6 +123,14 @@ const PostItems: FC<PostItemsProps> = ({ load, setErrorMessage }) => {
             </Typography>
           </div>
         </div>
+        <div style={{ height: 50 }}>
+          <Typography variant="subtitle2">
+            {dayjs(post.date).format("DD MMM YYYY")}
+          </Typography>
+          <Typography variant="subtitle2" align="center">
+            {dayjs(post.date).format("h:mm A")}
+          </Typography>
+        </div>
       </div>
       <div className="post-items-body">
         {post.photoId && (
@@ -160,7 +175,9 @@ const PostItems: FC<PostItemsProps> = ({ load, setErrorMessage }) => {
   );
 
   if (loading) {
-    return (
+    return allWindow ? (
+      <MySpin loading={loading} />
+    ) : (
       <div className="center-content">
         <CircularProgress size={30} />
       </div>
@@ -169,7 +186,8 @@ const PostItems: FC<PostItemsProps> = ({ load, setErrorMessage }) => {
 
   return (
     <>
-      {pagination.totalRows === 0 && <NoItemsV2 />}
+      {pagination.totalRows === 0 &&
+        (allWindow ? <NoItemsV1 /> : <NoItemsV2 />)}
       {pagination.rows.map((p) => getItem(p))}
       <div className="center-content">
         {pagination.page < pagination.totalPages && (
