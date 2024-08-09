@@ -28,6 +28,7 @@ interface PostModalProps {
   open: boolean;
   rePostId?: number;
   handleClose: () => void;
+  handleOk?: () => void;
   setLoading: (loading: boolean) => void;
   setErrorMessage: (message: string) => void;
 }
@@ -36,6 +37,7 @@ const PostModal: FC<PostModalProps> = ({
   open,
   handleClose,
   setLoading,
+  handleOk,
   setErrorMessage,
   rePostId,
 }) => {
@@ -53,7 +55,7 @@ const PostModal: FC<PostModalProps> = ({
     });
   }, [open]);
 
-  const handleOk = async () => {
+  const post = async () => {
     if (
       formState.richText.text.length === 0 &&
       formState.photoId === undefined
@@ -65,10 +67,12 @@ const PostModal: FC<PostModalProps> = ({
     handleClose();
 
     setLoading(true);
-    const response = await newPost(formState);
+    const response = await newPost({ ...formState, rePostId: rePostId });
     setLoading(false);
 
     if (!response.ok) setErrorMessage(response.message);
+
+    if (handleOk) handleOk();
   };
 
   return (
@@ -83,7 +87,9 @@ const PostModal: FC<PostModalProps> = ({
           <Grid xs={1} item></Grid>
           <Grid xs={10} item>
             <div className="center-content">
-              <Typography variant="h5">New post</Typography>
+              <Typography variant="h5">
+                {rePostId ? "Re post" : "New post"}
+              </Typography>
             </div>
           </Grid>
           <Grid xs={1} item>
@@ -92,30 +98,32 @@ const PostModal: FC<PostModalProps> = ({
             </IconButton>
           </Grid>
         </Grid>
-        <div className="new-post-img-container">
-          <IconButton component="label" role={undefined} tabIndex={-1}>
-            <AddAPhotoIcon fontSize="large" />
-            <UploadPhoto
-              onChange={(state: UploadPhotoState) => {
-                if (state.ok) {
-                  setFormState({ ...formState, photoId: state.id });
-                } else {
-                  setErrorMessage(state.error || "Error uploading photo");
-                }
-              }}
-              setLoading={setLoading}
-            />
-          </IconButton>
-          {formState.photoId ? (
-            <img
-              style={{ width: 50, height: 50 }}
-              src={displayPhoto(formState.photoId)}
-              alt="img-post"
-            />
-          ) : (
-            <></>
-          )}
-        </div>
+        {rePostId == null && (
+          <div className="new-post-img-container">
+            <IconButton component="label" role={undefined} tabIndex={-1}>
+              <AddAPhotoIcon fontSize="large" />
+              <UploadPhoto
+                onChange={(state: UploadPhotoState) => {
+                  if (state.ok) {
+                    setFormState({ ...formState, photoId: state.id });
+                  } else {
+                    setErrorMessage(state.error || "Error uploading photo");
+                  }
+                }}
+                setLoading={setLoading}
+              />
+            </IconButton>
+            {formState.photoId ? (
+              <img
+                style={{ width: 50, height: 50 }}
+                src={displayPhoto(formState.photoId)}
+                alt="img-post"
+              />
+            ) : (
+              <></>
+            )}
+          </div>
+        )}
         <RichTextEditor
           placeholder="Describe your post"
           onChange={(richText) =>
@@ -126,7 +134,7 @@ const PostModal: FC<PostModalProps> = ({
           <Button
             variant="outlined"
             style={{ width: 300, fontSize: 16 }}
-            onClick={handleOk}
+            onClick={post}
           >
             Post
           </Button>

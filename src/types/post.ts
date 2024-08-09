@@ -14,6 +14,7 @@ export interface Post {
   photoId?: number;
   rePost: Post;
   reaction: boolean;
+  cantRePosts: number;
   cantReactions: number;
   cantMessages: number;
 }

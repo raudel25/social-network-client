@@ -24,7 +24,6 @@ const ProfileItems: FC<ProfileItemsProps> = ({ load, setErrorMessage }) => {
   const navigate = useNavigate();
 
   const { followUnFollow } = profileService();
-
   const { user } = useContext(UserContext);
 
   const [loading, setLoading] = useState<boolean>(false);

@@ -17,6 +17,7 @@ import RepeatOutlinedIcon from "@mui/icons-material/RepeatOutlined";
 import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
 import FavoriteOutlinedIcon from "@mui/icons-material/FavoriteOutlined";
 import { postService } from "../../api/post";
+import PostModal from "./PostModal";
 
 interface PostItemsProps {
   load: (query: any) => Promise<ApiResponse<Pagination<Post>>>;
@@ -25,6 +26,7 @@ interface PostItemsProps {
 
 const PostItems: FC<PostItemsProps> = ({ load, setErrorMessage }) => {
   const [loading, setLoading] = useState<boolean>(false);
+  const [rePost, setRePost] = useState<number | undefined>();
   const [pagination, setPagination] = useState<Pagination<Post>>({
     limit: 10,
     page: 0,
@@ -89,7 +91,7 @@ const PostItems: FC<PostItemsProps> = ({ load, setErrorMessage }) => {
     });
   };
 
-  const getItem = (post: Post) => (
+  const getItem = (post: Post, showFooter: boolean = true) => (
     <div className="post-items-container" key={post.id}>
       <div className="post-items-header">
         <div
@@ -122,30 +124,37 @@ const PostItems: FC<PostItemsProps> = ({ load, setErrorMessage }) => {
           </div>
         )}
         <div className="mb-1">{parse(post.richText?.html ?? "")}</div>
-        <div className="post-items-icons">
-          <Button>
-            <ChatBubbleOutlineOutlinedIcon fontSize="small" />
-            <span className="ml-1">
-              <Typography variant="body1">{post.cantMessages}</Typography>
-            </span>
-          </Button>
-          <Button>
-            <RepeatOutlinedIcon fontSize="small" />
-            <span className="ml-1">
-              <Typography variant="body1">{post.cantReactions}</Typography>
-            </span>
-          </Button>
-          <Button onClick={() => reactionFunc(post.id)}>
-            {post.reaction ? (
-              <FavoriteOutlinedIcon fontSize="small" />
-            ) : (
-              <FavoriteBorderOutlinedIcon fontSize="small" />
-            )}
-            <span className="ml-1">
-              <Typography variant="body1">{post.cantReactions}</Typography>
-            </span>
-          </Button>
-        </div>
+        {post.rePost && (
+          <div className="mt-5">{getItem(post.rePost, false)}</div>
+        )}
+        {showFooter && (
+          <div className="post-items-icons">
+            <Button>
+              <ChatBubbleOutlineOutlinedIcon fontSize="small" />
+              <span className="ml-1">
+                <Typography variant="body1">{post.cantMessages}</Typography>
+              </span>
+            </Button>
+            <Button
+              onClick={() => setRePost(post.rePost ? post.rePost.id : post.id)}
+            >
+              <RepeatOutlinedIcon fontSize="small" />
+              <span className="ml-1">
+                <Typography variant="body1">{post.cantRePosts}</Typography>
+              </span>
+            </Button>
+            <Button onClick={() => reactionFunc(post.id)}>
+              {post.reaction ? (
+                <FavoriteOutlinedIcon fontSize="small" />
+              ) : (
+                <FavoriteBorderOutlinedIcon fontSize="small" />
+              )}
+              <span className="ml-1">
+                <Typography variant="body1">{post.cantReactions}</Typography>
+              </span>
+            </Button>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -167,6 +176,26 @@ const PostItems: FC<PostItemsProps> = ({ load, setErrorMessage }) => {
           <Button onClick={() => loadPosts(false)}>See more</Button>
         )}
       </div>
+      <PostModal
+        setLoading={setLoading}
+        setErrorMessage={setErrorMessage}
+        open={rePost != null}
+        rePostId={rePost}
+        handleOk={() =>
+          setPagination({
+            ...pagination,
+            rows: pagination.rows.map((p) =>
+              p.id == rePost
+                ? {
+                    ...p,
+                    cantRePosts: p.cantRePosts + 1,
+                  }
+                : p
+            ),
+          })
+        }
+        handleClose={() => setRePost(undefined)}
+      />
     </>
   );
 };
