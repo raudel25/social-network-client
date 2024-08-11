@@ -94,6 +94,14 @@ const PostPage = () => {
           }
         : undefined
     );
+    setMessagePost("");
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault(); // Evita el salto de línea en el TextField
+      messageFunc(); // Llama a la función cuando se presiona Enter
+    }
   };
 
   const followUnFollowFunc = async () => {
@@ -139,13 +147,15 @@ const PostPage = () => {
             </div>
           </div>
           <div className="post-container">
-            <PostItem
-              post={post}
-              rePostFunc={() => setOpenRePost(true)}
-              followUnFollowFunc={followUnFollowFunc}
-              reactionFunc={() => reactionFunc(post.id)}
-            />
-            <PostMessages messages={post.messages} />
+            <div className="profile-container-child">
+              <PostItem
+                post={post}
+                rePostFunc={() => setOpenRePost(true)}
+                followUnFollowFunc={followUnFollowFunc}
+                reactionFunc={() => reactionFunc(post.id)}
+              />
+              <PostMessages messages={post.messages} />
+            </div>
           </div>
           <div className="post-message-editor">
             <TextField
@@ -153,6 +163,7 @@ const PostPage = () => {
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 setMessagePost(e.target.value)
               }
+              onKeyDown={handleKeyDown}
               multiline
               maxRows={2}
               fullWidth

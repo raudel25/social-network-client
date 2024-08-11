@@ -145,7 +145,7 @@ const ProfilePage = () => {
       />
 
       {profile ? (
-        <>
+        <div className="profile-layout">
           <div className="profile-header">
             <IconButton onClick={() => navigate(-1)}>
               <ArrowBack />
@@ -219,7 +219,7 @@ const ProfilePage = () => {
               </CustomTabPanel>
             </div>
           </div>
-        </>
+        </div>
       ) : (
         <NoItemsV1 />
       )}

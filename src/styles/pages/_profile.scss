@@ -1,3 +1,9 @@
+.profile-layout {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
 .profile-header {
   display: flex;
   align-items: center;
@@ -6,7 +12,7 @@
 
 .profile-container {
   overflow: hidden;
-  height: 90%;
+  flex: 1;
 }
 
 .profile-container-child {

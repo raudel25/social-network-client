@@ -1,6 +1,6 @@
 import { FC, useContext } from "react";
 import { Message } from "../../types/post";
-import { Avatar, Box, Paper, Typography } from "@mui/material";
+import { Avatar, Box, Paper, Typography, useTheme } from "@mui/material";
 import { displayPhoto } from "../../common/common";
 import { UserContext } from "../../context/UserProvider";
 import parse from "html-react-parser";
@@ -12,9 +12,10 @@ interface PostMessagesProps {
 const PostMessages: FC<PostMessagesProps> = ({ messages }) => {
   const userContext = useContext(UserContext);
   const navigate = useNavigate();
+  const theme = useTheme();
   return (
     <Box>
-      {messages.map((message, ind) => (
+      {(messages ?? []).map((message, ind) => (
         <Box
           key={ind}
           display="flex"
@@ -44,13 +45,13 @@ const PostMessages: FC<PostMessagesProps> = ({ messages }) => {
               borderRadius: "16px",
               bgcolor:
                 message.profile.id == userContext.user!.profile.id
-                  ? "primary.main"
-                  : "background.paper",
+                  ? theme.palette.primary.main
+                  : theme.palette.background.paper,
               color:
                 message.profile.id == userContext.user!.profile.id
-                  ? "white"
-                  : "text.primary",
-              maxWidth: "70%", // Ajusta el ancho máximo del Paper
+                  ? theme.palette.getContrastText(theme.palette.primary.main)
+                  : theme.palette.text.primary,
+              maxWidth: "70%",
             }}
           >
             <Typography variant="subtitle2">
