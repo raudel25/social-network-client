@@ -17,7 +17,7 @@ export const profileService = () => {
     method<{}, Pagination<Profile>>(HttpMethods.GET, {}, undefined, query);
 
   const getByUsername = (username: string) =>
-    method<{}, Profile>(HttpMethods.GET, {}, username);
+    method<{}, Profile>(HttpMethods.GET, {}, `user/${username}`);
   const updateProfile = (data: ProfileForm) =>
     method<ProfileForm, {}>(HttpMethods.PUT, data);
   const getByFollowed = (username: string, query: any) =>
