@@ -7,6 +7,7 @@ import { postService } from "../../api/post";
 import PostModal from "./PostModal";
 import MySpin from "../../layout/MySpin";
 import PostItem from "./PostItem";
+import { profileService } from "../../api/profile";
 
 interface PostItemsProps {
   allWindow?: boolean;
@@ -30,6 +31,7 @@ const PostItems: FC<PostItemsProps> = ({
   });
 
   const { reaction } = postService();
+  const { followUnFollow } = profileService();
 
   const loadPosts = async (clear: boolean) => {
     setLoading(true);
@@ -84,6 +86,31 @@ const PostItems: FC<PostItemsProps> = ({
     });
   };
 
+  const followUnFollowFunc = async (id: number) => {
+    setLoading(true);
+    const response = await followUnFollow(
+      pagination.rows.filter((p) => p.id == id)[0].profile.id
+    );
+    setLoading(false);
+
+    if (!response.ok) {
+      setErrorMessage(response.message);
+      return;
+    }
+
+    setPagination({
+      ...pagination,
+      rows: pagination.rows.map((p) =>
+        p.id == id
+          ? {
+              ...p,
+              profile: { ...p.profile, follow: !p.profile.follow },
+            }
+          : p
+      ),
+    });
+  };
+
   if (loading) {
     return allWindow ? (
       <MySpin loading={loading} />
@@ -101,6 +128,7 @@ const PostItems: FC<PostItemsProps> = ({
       {pagination.rows.map((p) => (
         <PostItem
           post={p}
+          followUnFollowFunc={() => followUnFollowFunc(p.id)}
           reactionFunc={() => reactionFunc(p.id)}
           rePostFunc={() => setRePost(p.rePost ? p.rePost.id : p.id)}
         />

@@ -15,9 +15,11 @@ import {
 import { ArrowBack, Send } from "@mui/icons-material";
 import PostItem from "./PostItem";
 import PostModal from "./PostModal";
+import { profileService } from "../../api/profile";
 
 const PostPage = () => {
   const { getPostById, reaction } = postService();
+  const { followUnFollow } = profileService();
 
   const { id } = useParams();
   const navigate = useNavigate();
@@ -61,6 +63,26 @@ const PostPage = () => {
     );
   };
 
+  const followUnFollowFunc = async () => {
+    setLoading(true);
+    const response = await followUnFollow(post?.profile.id ?? 0);
+    setLoading(false);
+
+    if (!response.ok) {
+      setErrorMessage(response.message);
+      return;
+    }
+
+    setPost(
+      post
+        ? {
+            ...post,
+            profile: { ...post.profile, follow: !post.profile.follow },
+          }
+        : undefined
+    );
+  };
+
   useEffect(() => {
     if (id && isStringANumber(id)) loadPost(parseInt(id));
   }, [id]);
@@ -87,6 +109,7 @@ const PostPage = () => {
             <PostItem
               post={post}
               rePostFunc={() => setOpenRePost(true)}
+              followUnFollowFunc={followUnFollowFunc}
               reactionFunc={() => reactionFunc(post.id)}
             />
           </div>

@@ -1,4 +1,3 @@
-import { FC } from "react";
 import { Post } from "../../types/post";
 import { useNavigate } from "react-router-dom";
 import { displayPhoto } from "../../common/common";
@@ -9,15 +8,27 @@ import ChatBubbleOutlineOutlinedIcon from "@mui/icons-material/ChatBubbleOutline
 import RepeatOutlinedIcon from "@mui/icons-material/RepeatOutlined";
 import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
 import FavoriteOutlinedIcon from "@mui/icons-material/FavoriteOutlined";
+import { FC, useContext } from "react";
+import DropdownMenu from "../../common/DropdownMenu";
+import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
+import { UserContext } from "../../context/UserProvider";
 
 interface PostItemProps {
   post: Post;
   rePostFunc?: () => void;
   reactionFunc?: () => void;
+  followUnFollowFunc?: () => void;
 }
 
-const PostItem: FC<PostItemProps> = ({ post, rePostFunc, reactionFunc }) => {
+const PostItem: FC<PostItemProps> = ({
+  post,
+  rePostFunc,
+  reactionFunc,
+  followUnFollowFunc,
+}) => {
   const navigate = useNavigate();
+
+  const userContext = useContext(UserContext);
 
   return (
     <div className="post-items-container" key={post.id}>
@@ -44,13 +55,39 @@ const PostItem: FC<PostItemProps> = ({ post, rePostFunc, reactionFunc }) => {
             </Typography>
           </div>
         </div>
-        <div style={{ height: 50 }}>
-          <Typography variant="subtitle2">
-            {dayjs(post.date).format("DD MMM YYYY")}
+        <div className="center-content">
+          <Typography variant="subtitle2" color="textSecondary">
+            {dayjs(post.date).format("DD MMM YYYY h:mm A")}
           </Typography>
-          <Typography variant="subtitle2" align="center">
-            {dayjs(post.date).format("h:mm A")}
-          </Typography>
+          {followUnFollowFunc && (
+            <div className="ml-5">
+              <DropdownMenu
+                options={(userContext.user!.profile.id != post.profile.id
+                  ? [
+                      {
+                        text: post.profile.follow
+                          ? "Following this user"
+                          : "Follow this user",
+                        action: followUnFollowFunc,
+                        icon: <PersonOutlineIcon fontSize="small" />,
+                      },
+                    ]
+                  : []
+                ).concat([
+                  {
+                    text: "See reactions",
+                    action: () => {},
+                    icon: <FavoriteBorderOutlinedIcon fontSize="small" />,
+                  },
+                  {
+                    text: "See re posts",
+                    action: () => {},
+                    icon: <RepeatOutlinedIcon fontSize="small" />,
+                  },
+                ])}
+              />
+            </div>
+          )}
         </div>
       </div>
       <div className="post-items-body">
