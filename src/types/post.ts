@@ -17,5 +17,15 @@ export interface Post {
   cantRePosts: number;
   cantReactions: number;
   cantMessages: number;
+  messages: Message[];
   date: string;
+}
+
+export interface MessageForm {
+  richText: RichText;
+}
+
+export interface Message {
+  richText: RichText;
+  profile: Profile;
 }

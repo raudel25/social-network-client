@@ -1,5 +1,5 @@
 import { HttpMethods, Pagination } from "../types/api";
-import { Post, PostForm } from "../types/post";
+import { MessageForm, Post, PostForm } from "../types/post";
 import { apiWithToken } from "./fetch";
 
 export const postService = () => {
@@ -33,5 +33,8 @@ export const postService = () => {
   const reaction = (id: number) =>
     method<{}, {}>(HttpMethods.POST, {}, `reaction/${id}`);
 
-  return { newPost, getPosts, getByUsername, reaction, getPostById };
+  const message = (id: number, form: MessageForm) =>
+    method<MessageForm, {}>(HttpMethods.POST, form, `message/${id}`);
+
+  return { newPost, getPosts, getByUsername, reaction, getPostById, message };
 };
