@@ -59,7 +59,7 @@ const PostPage = () => {
       return;
     }
 
-    setPost(response.value);
+    setPost({ ...response.value!, messages: response.value!.messages ?? [] });
   };
 
   const reactionFunc = async (id: number) => {
@@ -76,6 +76,7 @@ const PostPage = () => {
       post
         ? {
             ...post,
+
             reaction: !post.reaction,
             cantReactions: post.cantReactions + (post.reaction ? -1 : 1),
           }
@@ -165,7 +166,7 @@ const PostPage = () => {
         handleClose={() => setErrorMessage("")}
         message={errorMessage}
       />
-      {post ? (
+      {post && id && isStringANumber(id) ? (
         <div className="post-layout">
           <div className="post-header mb-1">
             <IconButton onClick={() => navigate(-1)}>
@@ -196,17 +197,17 @@ const PostPage = () => {
                 </Tabs>
               </Box>
               <CustomTabPanel value={value} index={0}>
-                <PostMessages messages={post.messages ?? []} />
+                <PostMessages messages={post.messages} />
               </CustomTabPanel>
               <CustomTabPanel value={value} index={1}>
                 <PostItems
-                  load={(query: any) => getByRePostId(post.id, query)}
+                  load={(query: any) => getByRePostId(parseInt(id), query)}
                   setErrorMessage={setErrorMessage}
                 />
               </CustomTabPanel>
               <CustomTabPanel value={value} index={2}>
                 <ProfileItems
-                  load={(query: any) => getReactionsPost(post.id, query)}
+                  load={(query: any) => getReactionsPost(parseInt(id), query)}
                   setErrorMessage={setErrorMessage}
                 />
               </CustomTabPanel>

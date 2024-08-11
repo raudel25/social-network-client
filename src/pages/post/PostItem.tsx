@@ -31,7 +31,7 @@ const PostItem: FC<PostItemProps> = ({
   const userContext = useContext(UserContext);
 
   return (
-    <div className="post-items-container" key={post.id}>
+    <div className="post-items-container">
       <div className="post-items-header">
         <div
           className="post-item-name pointer"

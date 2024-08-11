@@ -125,8 +125,9 @@ const PostItems: FC<PostItemsProps> = ({
     <>
       {pagination.totalRows === 0 &&
         (allWindow ? <NoItemsV1 /> : <NoItemsV2 />)}
-      {pagination.rows.map((p) => (
+      {pagination.rows.map((p, ind) => (
         <PostItem
+          key={ind}
           post={p}
           followUnFollowFunc={() => followUnFollowFunc(p.id)}
           reactionFunc={() => reactionFunc(p.id)}

@@ -131,7 +131,7 @@ const ProfilePage = () => {
         message={errorMessage}
       />
 
-      {profile ? (
+      {profile && username ? (
         <div className="profile-layout">
           <div className="profile-header">
             <IconButton onClick={() => navigate(-1)}>
@@ -186,21 +186,19 @@ const ProfilePage = () => {
               </Box>
               <CustomTabPanel value={value} index={0}>
                 <PostItems
-                  load={(query: any) =>
-                    getPostByUsername(profile.username, query)
-                  }
+                  load={(query: any) => getPostByUsername(username, query)}
                   setErrorMessage={setErrorMessage}
                 />
               </CustomTabPanel>
               <CustomTabPanel value={value} index={1}>
                 <ProfileItems
-                  load={(query: any) => getByFollowed(profile.username, query)}
+                  load={(query: any) => getByFollowed(username, query)}
                   setErrorMessage={setErrorMessage}
                 />
               </CustomTabPanel>
               <CustomTabPanel value={value} index={2}>
                 <ProfileItems
-                  load={(query: any) => getByFollower(profile.username, query)}
+                  load={(query: any) => getByFollower(username, query)}
                   setErrorMessage={setErrorMessage}
                 />
               </CustomTabPanel>

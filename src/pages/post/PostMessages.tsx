@@ -3,7 +3,6 @@ import { Message } from "../../types/post";
 import { Avatar, Box, Paper, Typography, useTheme } from "@mui/material";
 import { displayPhoto } from "../../common/common";
 import { UserContext } from "../../context/UserProvider";
-import parse from "html-react-parser";
 import { useNavigate } from "react-router-dom";
 import { NoItemsV2 } from "../../common/NoItems";
 
@@ -63,9 +62,7 @@ const PostMessages: FC<PostMessagesProps> = ({ messages }) => {
                 ? "Me:"
                 : `${message.profile.name}:`}
             </Typography>
-            <Typography variant="body1">
-              {parse(message.richText.html)}
-            </Typography>
+            <Typography variant="body1">{message.richText.text}</Typography>
           </Paper>
         </Box>
       ))}
