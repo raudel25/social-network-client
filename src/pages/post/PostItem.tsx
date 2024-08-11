@@ -54,20 +54,22 @@ const PostItem: FC<PostItemProps> = ({ post, rePostFunc, reactionFunc }) => {
         </div>
       </div>
       <div className="post-items-body">
-        {post.photoId && (
-          <div className="mb-5 center-content">
-            <img src={displayPhoto(post.photoId)}></img>
-          </div>
-        )}
-        <div className="mb-1">{parse(post.richText?.html ?? "")}</div>
-        {post.rePost && (
-          <div className="mt-5">
-            <PostItem post={post.rePost} />
-          </div>
-        )}
+        <div className="pointer" onClick={() => navigate(`../post/${post.id}`)}>
+          {post.photoId && (
+            <div className="mb-5 center-content">
+              <img src={displayPhoto(post.photoId)}></img>
+            </div>
+          )}
+          <div className="mb-1">{parse(post.richText?.html ?? "")}</div>
+          {post.rePost && (
+            <div className="mt-5">
+              <PostItem post={post.rePost} />
+            </div>
+          )}
+        </div>
         {rePostFunc && reactionFunc && (
           <div className="post-items-icons">
-            <Button>
+            <Button onClick={() => navigate(`../post/${post.id}`)}>
               <ChatBubbleOutlineOutlinedIcon fontSize="small" />
               <span className="ml-1">
                 <Typography variant="body1">{post.cantMessages}</Typography>

@@ -6,3 +6,8 @@ export function displayPhoto(id?: number) {
 
   return `${process.env.REACT_APP_API_URL}/photo/${id}?token=${token}`;
 }
+
+export function isStringANumber(value: string): boolean {
+  const regex = /^-?\d+(\.\d+)?$/;
+  return regex.test(value);
+}

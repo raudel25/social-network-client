@@ -19,6 +19,9 @@ export const postService = () => {
   const getPosts = (query: any) =>
     method<{}, Pagination<Post>>(HttpMethods.GET, {}, undefined, query);
 
+  const getPostById = (id: number) =>
+    method<{}, Post>(HttpMethods.GET, {}, `${id}`);
+
   const getByUsername = (username: string, query: any) =>
     method<{}, Pagination<Post>>(
       HttpMethods.GET,
@@ -30,5 +33,5 @@ export const postService = () => {
   const reaction = (id: number) =>
     method<{}, {}>(HttpMethods.POST, {}, `reaction/${id}`);
 
-  return { newPost, getPosts, getByUsername, reaction };
+  return { newPost, getPosts, getByUsername, reaction, getPostById };
 };

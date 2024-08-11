@@ -3,7 +3,6 @@ import { ApiResponse, Pagination } from "../../types/api";
 import { Post } from "../../types/post";
 import { Button, CircularProgress } from "@mui/material";
 import { NoItemsV1, NoItemsV2 } from "../../common/NoItems";
-import { useNavigate } from "react-router-dom";
 import { postService } from "../../api/post";
 import PostModal from "./PostModal";
 import MySpin from "../../layout/MySpin";
@@ -30,7 +29,6 @@ const PostItems: FC<PostItemsProps> = ({
     rows: [],
   });
 
-  const navigate = useNavigate();
   const { reaction } = postService();
 
   const loadPosts = async (clear: boolean) => {

@@ -38,3 +38,23 @@
 .post-items-container {
   margin-bottom: 15px;
 }
+
+.post-layout {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+.post-header {
+  display: flex;
+  align-items: center;
+  padding: 5px;
+}
+
+.post-container {
+  overflow: hidden;
+  flex: 1;
+}
+
+.post-message-editor {
+  padding: 10px;
+}
