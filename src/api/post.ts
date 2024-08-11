@@ -30,11 +30,22 @@ export const postService = () => {
       query
     );
 
+  const getByRePostId = (id: number, query: any) =>
+    method<{}, Pagination<Post>>(HttpMethods.GET, {}, `rePost/${id}`, query);
+
   const reaction = (id: number) =>
     method<{}, {}>(HttpMethods.POST, {}, `reaction/${id}`);
 
   const message = (id: number, form: MessageForm) =>
     method<MessageForm, {}>(HttpMethods.POST, form, `message/${id}`);
 
-  return { newPost, getPosts, getByUsername, reaction, getPostById, message };
+  return {
+    newPost,
+    getPosts,
+    getByUsername,
+    reaction,
+    getPostById,
+    getByRePostId,
+    message,
+  };
 };

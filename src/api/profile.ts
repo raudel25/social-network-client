@@ -36,6 +36,14 @@ export const profileService = () => {
       query
     );
 
+  const getReactionsPost = (id: number, query: any) =>
+    method<{}, Pagination<Profile>>(
+      HttpMethods.GET,
+      {},
+      `reactions/${id}`,
+      query
+    );
+
   const followUnFollow = (id: number) =>
     method<{}, {}>(HttpMethods.POST, {}, `followUnFollow/${id}`);
 
@@ -46,5 +54,6 @@ export const profileService = () => {
     getByFollowed,
     getByFollower,
     followUnFollow,
+    getReactionsPost,
   };
 };

@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { postService } from "../../api/post";
 import React, { useContext, useEffect, useState } from "react";
 import { isStringANumber } from "../../common/common";
@@ -7,8 +7,11 @@ import MessageSnackbar from "../../common/MessageSnackbar";
 import { Post } from "../../types/post";
 import { NoItemsV1 } from "../../common/NoItems";
 import {
+  Box,
   IconButton,
   InputAdornment,
+  Tab,
+  Tabs,
   TextField,
   Typography,
 } from "@mui/material";
@@ -18,10 +21,20 @@ import PostModal from "./PostModal";
 import { profileService } from "../../api/profile";
 import PostMessages from "./PostMessages";
 import { UserContext } from "../../context/UserProvider";
+import { CustomTabPanel } from "../../common/TabPanel";
+import PostItems from "./PostItems";
+import ProfileItems from "../profile/ProfileItems";
+
+function a11yProps(index: number) {
+  return {
+    id: `simple-tab-${index}`,
+    "aria-controls": `simple-tabpanel-${index}`,
+  };
+}
 
 const PostPage = () => {
-  const { getPostById, reaction, message } = postService();
-  const { followUnFollow } = profileService();
+  const { getPostById, reaction, message, getByRePostId } = postService();
+  const { followUnFollow, getReactionsPost } = profileService();
 
   const { id } = useParams();
   const navigate = useNavigate();
@@ -33,6 +46,8 @@ const PostPage = () => {
   const [post, setPost] = useState<Post | undefined>();
   const [openRePost, setOpenRePost] = useState<boolean>(false);
   const [messagePost, setMessagePost] = useState<string>("");
+  const [value, setValue] = useState(0);
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const loadPost = async (id: number) => {
     setLoading(true);
@@ -128,6 +143,20 @@ const PostPage = () => {
     if (id && isStringANumber(id)) loadPost(parseInt(id));
   }, [id]);
 
+  useEffect(() => {
+    const tab = searchParams.get("tab");
+    if (tab === "messages") setValue(0);
+    else if (tab === "rePosts") setValue(1);
+    else if (tab === "reactions") setValue(2);
+    else setValue(0);
+  }, [searchParams]);
+
+  const handleChange = (_: React.SyntheticEvent, newValue: number) => {
+    if (newValue === 0) setSearchParams({ tab: "messages" });
+    else if (newValue === 1) setSearchParams({ tab: "rePosts" });
+    else if (newValue === 2) setSearchParams({ tab: "reactions" });
+  };
+
   return (
     <>
       <MySpin loading={loading} />
@@ -154,32 +183,60 @@ const PostPage = () => {
                 followUnFollowFunc={followUnFollowFunc}
                 reactionFunc={() => reactionFunc(post.id)}
               />
-              <PostMessages messages={post.messages} />
+              <div className="mt-5"></div>
+              <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+                <Tabs
+                  value={value}
+                  onChange={handleChange}
+                  aria-label="basic tabs example"
+                >
+                  <Tab label="Messages" {...a11yProps(0)} />
+                  <Tab label="Re posts" {...a11yProps(1)} />
+                  <Tab label="Reactions" {...a11yProps(2)} />
+                </Tabs>
+              </Box>
+              <CustomTabPanel value={value} index={0}>
+                <PostMessages messages={post.messages ?? []} />
+              </CustomTabPanel>
+              <CustomTabPanel value={value} index={1}>
+                <PostItems
+                  load={(query: any) => getByRePostId(post.id, query)}
+                  setErrorMessage={setErrorMessage}
+                />
+              </CustomTabPanel>
+              <CustomTabPanel value={value} index={2}>
+                <ProfileItems
+                  load={(query: any) => getReactionsPost(post.id, query)}
+                  setErrorMessage={setErrorMessage}
+                />
+              </CustomTabPanel>
             </div>
           </div>
-          <div className="post-message-editor">
-            <TextField
-              value={messagePost}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setMessagePost(e.target.value)
-              }
-              onKeyDown={handleKeyDown}
-              multiline
-              maxRows={2}
-              fullWidth
-              placeholder="Comment on this post"
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    I
-                    <IconButton onClick={messageFunc}>
-                      <Send />
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              }}
-            />
-          </div>
+          {value == 0 && (
+            <div className="post-message-editor">
+              <TextField
+                value={messagePost}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setMessagePost(e.target.value)
+                }
+                onKeyDown={handleKeyDown}
+                multiline
+                maxRows={2}
+                fullWidth
+                placeholder="Comment on this post"
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      I
+                      <IconButton onClick={messageFunc}>
+                        <Send />
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+              />
+            </div>
+          )}
         </div>
       ) : (
         <NoItemsV1 />

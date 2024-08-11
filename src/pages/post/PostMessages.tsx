@@ -5,6 +5,7 @@ import { displayPhoto } from "../../common/common";
 import { UserContext } from "../../context/UserProvider";
 import parse from "html-react-parser";
 import { useNavigate } from "react-router-dom";
+import { NoItemsV2 } from "../../common/NoItems";
 
 interface PostMessagesProps {
   messages: Message[];
@@ -13,9 +14,12 @@ const PostMessages: FC<PostMessagesProps> = ({ messages }) => {
   const userContext = useContext(UserContext);
   const navigate = useNavigate();
   const theme = useTheme();
+
+  if (messages.length === 0) return <NoItemsV2 />;
+
   return (
     <Box>
-      {(messages ?? []).map((message, ind) => (
+      {messages.map((message, ind) => (
         <Box
           key={ind}
           display="flex"

@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import { Profile, ProfileForm } from "../../types/profile";
 import { useContext, useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { profileService } from "../../api/profile";
 import MessageSnackbar from "../../common/MessageSnackbar";
 import MySpin from "../../layout/MySpin";
@@ -23,28 +23,7 @@ import parse from "html-react-parser";
 import ProfileItems from "./ProfileItems";
 import { postService } from "../../api/post";
 import PostItems from "../post/PostItems";
-
-interface TabPanelProps {
-  children?: React.ReactNode;
-  index: number;
-  value: number;
-}
-
-function CustomTabPanel(props: TabPanelProps) {
-  const { children, value, index, ...other } = props;
-
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`simple-tabpanel-${index}`}
-      aria-labelledby={`simple-tab-${index}`}
-      {...other}
-    >
-      {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
-    </div>
-  );
-}
+import { CustomTabPanel } from "../../common/TabPanel";
 
 function a11yProps(index: number) {
   return {
@@ -75,6 +54,7 @@ const ProfilePage = () => {
   const [profile, setProfile] = useState<Profile | undefined>(undefined);
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [value, setValue] = useState(0);
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const loadProfile = async (username: string) => {
     setLoading(true);
@@ -119,13 +99,20 @@ const ProfilePage = () => {
   useEffect(() => {
     if (username) loadProfile(username);
     else setErrorMessage("Profile not found");
-
-    setValue(0);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [username]);
 
+  useEffect(() => {
+    const tab = searchParams.get("tab");
+    if (tab === "posts") setValue(0);
+    else if (tab === "followers") setValue(1);
+    else if (tab === "following") setValue(2);
+    else setValue(0);
+  }, [searchParams]);
+
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-    setValue(newValue);
+    if (newValue === 0) setSearchParams({ tab: "posts" });
+    else if (newValue === 1) setSearchParams({ tab: "followers" });
+    else if (newValue === 2) setSearchParams({ tab: "following" });
   };
 
   const handleProfileBtn = () => {

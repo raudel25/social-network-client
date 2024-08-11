@@ -75,13 +75,18 @@ const PostItem: FC<PostItemProps> = ({
                   : []
                 ).concat([
                   {
+                    text: "See messages",
+                    action: () => navigate(`../post/${post.id}?tab=messages`),
+                    icon: <ChatBubbleOutlineOutlinedIcon fontSize="small" />,
+                  },
+                  {
                     text: "See reactions",
-                    action: () => {},
+                    action: () => navigate(`../post/${post.id}?tab=reactions`),
                     icon: <FavoriteBorderOutlinedIcon fontSize="small" />,
                   },
                   {
                     text: "See re posts",
-                    action: () => {},
+                    action: () => navigate(`../post/${post.id}?tab=rePosts`),
                     icon: <RepeatOutlinedIcon fontSize="small" />,
                   },
                 ])}
@@ -106,7 +111,7 @@ const PostItem: FC<PostItemProps> = ({
         </div>
         {rePostFunc && reactionFunc && (
           <div className="post-items-icons">
-            <Button onClick={() => navigate(`../post/${post.id}`)}>
+            <Button onClick={() => navigate(`../post/${post.id}?tab=messages`)}>
               <ChatBubbleOutlineOutlinedIcon fontSize="small" />
               <span className="ml-1">
                 <Typography variant="body1">{post.cantMessages}</Typography>
