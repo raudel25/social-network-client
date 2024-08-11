@@ -36,6 +36,12 @@ export const profileService = () => {
       query
     );
 
+  const search = (search: string, query: any) =>
+    method<{}, Pagination<Profile>>(HttpMethods.GET, {}, "search", {
+      search: search,
+      ...query,
+    });
+
   const getReactionsPost = (id: number, query: any) =>
     method<{}, Pagination<Profile>>(
       HttpMethods.GET,
@@ -55,5 +61,6 @@ export const profileService = () => {
     getByFollower,
     followUnFollow,
     getReactionsPost,
+    search,
   };
 };
