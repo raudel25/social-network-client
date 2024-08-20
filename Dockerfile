@@ -1,32 +1,26 @@
-# Etapa de construcción
-FROM node:18-alpine as build
+# Paso 1: Utilizar una imagen base de Node.js
+FROM node:latest AS build
 
-# Establecer el directorio de trabajo
+# Paso 2: Establecer el directorio de trabajo dentro del contenedor
 WORKDIR /app
 
-# Copiar los archivos de configuración
+# Paso 3: Copiar el archivo package.json y el archivo yarn.lock
 COPY package.json yarn.lock ./
 
-# Instalar dependencias
+# Paso 4: Instalar las dependencias de la aplicación
 RUN yarn install --frozen-lockfile
 
-# Copiar el código fuente
+# Paso 5: Copiar todo el código fuente de la aplicación al contenedor
 COPY . .
 
-# Construir la aplicación
+# Paso 6: Construir la aplicación de producción
 RUN yarn build
 
-# Etapa de producción
-FROM nginx:alpine
+# Paso 7: Instalar las dependencias para el servidor
+RUN yarn add express serve-static
 
-# Copiar los archivos de construcción desde la etapa anterior
-COPY --from=build /app/build /usr/share/nginx/html
-
-# Copiar la configuración personalizada de nginx (si es necesario)
-# COPY nginx.conf /etc/nginx/conf.d/default.conf
-
-# Exponer el puerto 3000
+# Paso 8: Exponer el puerto en el que se ejecutará la aplicación
 EXPOSE 3000
 
-# Iniciar nginx
-CMD ["nginx", "-g", "daemon off;"]
+# Paso 9: Comando para iniciar la aplicación con Node.js
+CMD ["node", "server.js"]
